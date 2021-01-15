@@ -1,0 +1,13 @@
+﻿using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+
+namespace Restaurant.WebApi.Services.User
+{
+    public interface IUserService
+    {
+        Task<IdentityResult> CreateRole(string role);
+        Task<IdentityUser> CreateUser(string userName, string password);
+        Task<IdentityResult> AssignRoleToUser(string role, IdentityUser user);
+        Task<LoginResponse> LoginAsync(LoginRequest request);
+    }
+}
