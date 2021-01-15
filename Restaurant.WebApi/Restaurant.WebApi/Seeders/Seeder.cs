@@ -29,8 +29,7 @@ namespace Restaurant.WebApi.Seeders
         {
             var username = configuration["DefaultAdminCredentials:Username"];
             var password = configuration["DefaultAdminCredentials:Password"];
-            var defaultAdminUser = await userService.CreateUser(username, password);
-            await userService.AssignRoleToUser(Roles.ADMIN, defaultAdminUser);
+            await userService.CreateUserWithRole(username, password, Roles.ADMIN);
         }
     }
 }

@@ -26,7 +26,14 @@ namespace Restaurant.WebApi.Services.User
             return result;
         }
 
-        public async Task<IdentityUser> CreateUser(string userName, string password)
+        public async Task<IdentityUser> CreateUserWithRole(string userName, string password, string role)
+        {
+            var user = await CreateUser(userName, password);
+            await AssignRoleToUser(role, user);
+            return user;
+        }
+
+        private async Task<IdentityUser> CreateUser(string userName, string password)
         {
             var user = new IdentityUser
             {
@@ -40,7 +47,7 @@ namespace Restaurant.WebApi.Services.User
             return user;
         }
 
-        public async Task<IdentityResult> AssignRoleToUser(string role, IdentityUser user)
+        private async Task<IdentityResult> AssignRoleToUser(string role, IdentityUser user)
         {
             var result = await userManager.AddToRoleAsync(user, role);
             if (!result.Succeeded)

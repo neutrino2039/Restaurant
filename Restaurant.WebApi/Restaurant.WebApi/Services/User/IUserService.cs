@@ -6,8 +6,7 @@ namespace Restaurant.WebApi.Services.User
     public interface IUserService
     {
         Task<IdentityResult> CreateRole(string role);
-        Task<IdentityUser> CreateUser(string userName, string password);
-        Task<IdentityResult> AssignRoleToUser(string role, IdentityUser user);
+        Task<IdentityUser> CreateUserWithRole(string userName, string password, string role);
         Task<LoginResponse> LoginAsync(LoginRequest request);
     }
 }
