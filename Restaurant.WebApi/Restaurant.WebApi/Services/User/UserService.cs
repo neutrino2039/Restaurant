@@ -156,5 +156,24 @@ namespace Restaurant.WebApi.Services.User
             };
         }
 
+        public async Task<DeleteUserResponse> DeleteUserAsync(DeleteUserRequest request)
+        {
+            var userDeletedReponse = new DeleteUserResponse
+            {
+                Message = "User deletion successful."
+            };
+
+            var user = await userManager.FindByIdAsync(request.Id);
+            if (user is null) return userDeletedReponse;
+
+            var result = await userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+                return new DeleteUserResponse
+                {
+                    Errors = CreateError("DeleteUser", "Unable to delete user.")
+                };
+
+            return userDeletedReponse;
+        }
     }
 }

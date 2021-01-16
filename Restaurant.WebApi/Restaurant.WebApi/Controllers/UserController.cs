@@ -43,5 +43,11 @@ namespace Restaurant.WebApi.Controllers
             return ApiResult(await userService.UpdateUserAsync(request));
         }
 
+        [Authorize(Roles = Roles.ADMIN)]
+        [HttpPost("DeleteUser")]
+        public async Task<IActionResult> DeleteUserAsync(DeleteUserRequest request)
+        {
+            return ApiResult(await userService.DeleteUserAsync(request));
+        }
     }
 }
