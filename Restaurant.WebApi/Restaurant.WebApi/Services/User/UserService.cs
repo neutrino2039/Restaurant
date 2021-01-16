@@ -79,6 +79,7 @@ namespace Restaurant.WebApi.Services.User
             return new LoginResponse
             {
                 Message = "Logged in successfully.",
+                Id = user.Id,
                 Token = tokenService.GenerateToken(role, user)
             };
         }
