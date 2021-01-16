@@ -131,5 +131,30 @@ namespace Restaurant.WebApi.Services.User
                 };
             }
         }
+
+        public async Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest request)
+        {
+            var user = await userManager.FindByIdAsync(request.Id);
+            if (user is null)
+                return new UpdateUserResponse
+                {
+                    Errors = CreateError("EditUser", "Invalid user ID")
+                };
+
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            var result = await userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return new UpdateUserResponse
+                {
+                    Errors = CreateError("EditUser", "Unable to update user.")
+                };
+
+            return new UpdateUserResponse
+            {
+                Message = "User update successful."
+            };
+        }
+
     }
 }

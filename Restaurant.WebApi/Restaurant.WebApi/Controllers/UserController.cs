@@ -35,5 +35,13 @@ namespace Restaurant.WebApi.Controllers
         {
             return ApiResult(await userService.CreateOwnerAsync(request));
         }
+
+        [Authorize(Roles = Roles.ADMIN)]
+        [HttpPost("UpdateUser")]
+        public async Task<IActionResult> UpdateUserAsync(UpdateUserRequest request)
+        {
+            return ApiResult(await userService.UpdateUserAsync(request));
+        }
+
     }
 }

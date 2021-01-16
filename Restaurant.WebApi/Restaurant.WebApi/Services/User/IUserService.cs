@@ -11,5 +11,6 @@ namespace Restaurant.WebApi.Services.User
         Task<LoginResponse> LoginAsync(LoginRequest request);
         Task<CreateUserResponse> RegisterAsync(CreateUserRequest request);
         Task<CreateUserResponse> CreateOwnerAsync(CreateUserRequest request);
+        Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest request);
     }
 }
