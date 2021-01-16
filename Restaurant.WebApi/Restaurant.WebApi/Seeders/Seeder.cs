@@ -27,7 +27,7 @@ namespace Restaurant.WebApi.Seeders
 
         private static async Task SeedDefaultAdminUser(IConfiguration configuration, IUserService userService)
         {
-            var userName = configuration["DefaultAdminCredentials:Username"];
+            var userName = configuration["DefaultAdminCredentials:UserName"];
             var password = configuration["DefaultAdminCredentials:Password"];
             var firstName = configuration["DefaultAdminCredentials:FirstName"];
             var lastName = configuration["DefaultAdminCredentials:LastName"];

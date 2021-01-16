@@ -40,7 +40,7 @@ namespace Restaurant.WebApi.Services.User
         private async Task<AppUser> CreateUser(string userName, string password, string firstName, string lastName)
         {
             if ((await userManager.FindByNameAsync(userName)) is not null)
-                throw new Exception("Username is already taken.");
+                throw new Exception("User name is already taken.");
 
             var user = new AppUser
             {
@@ -67,9 +67,9 @@ namespace Restaurant.WebApi.Services.User
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
             var invalidCredentialsReponse =
-                new LoginResponse { Errors = CreateError("Login", "Invalid username or password.") };
+                new LoginResponse { Errors = CreateError("Login", "Invalid user name or password.") };
 
-            var user = await userManager.FindByNameAsync(request.Username);
+            var user = await userManager.FindByNameAsync(request.UserName);
             if (user == null) return invalidCredentialsReponse;
 
             if (!await userManager.CheckPasswordAsync(user, request.Password))
@@ -90,8 +90,8 @@ namespace Restaurant.WebApi.Services.User
             try
             {
                 var user = await CreateUserWithRole(
-                    request.Username, 
-                    request.Password, 
+                    request.UserName,
+                    request.Password,
                     request.FirstName,
                     request.LastName,
                     Roles.REGULAR);
@@ -114,7 +114,7 @@ namespace Restaurant.WebApi.Services.User
             try
             {
                 var user = await CreateUserWithRole(
-                    request.Username,
+                    request.UserName,
                     request.Password,
                     request.FirstName,
                     request.LastName,

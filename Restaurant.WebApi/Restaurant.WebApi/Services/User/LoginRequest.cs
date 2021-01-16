@@ -8,7 +8,7 @@ namespace Restaurant.WebApi.Services.User
     {
         [Required]
         [StringLength(256, MinimumLength = 4)]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 15)]
