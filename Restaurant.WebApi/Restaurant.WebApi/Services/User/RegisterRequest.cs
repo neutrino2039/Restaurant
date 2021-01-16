@@ -13,5 +13,13 @@ namespace Restaurant.WebApi.Services.User
         [Required]
         [StringLength(256, MinimumLength = 15)]
         public string Password { get; set; }
+
+        [Required]
+        [StringLength(256)]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(256)]
+        public string LastName { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Restaurant.WebApi.Constants;
+using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.Token;
 using System;
 using System.Threading.Tasks;
@@ -10,10 +11,10 @@ namespace Restaurant.WebApi.Services.User
     public class UserService : IUserService
     {
         private RoleManager<IdentityRole> roleManager;
-        private UserManager<IdentityUser> userManager;
+        private UserManager<AppUser> userManager;
         private ITokenService tokenService;
 
-        public UserService(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, ITokenService tokenService)
+        public UserService(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, ITokenService tokenService)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
@@ -28,23 +29,25 @@ namespace Restaurant.WebApi.Services.User
             return result;
         }
 
-        public async Task<IdentityUser> CreateUserWithRole(string userName, string password, string role)
+        public async Task<AppUser> CreateUserWithRole(string userName, string password, string firstName, string lastName, string role)
         {
-            var user = await CreateUser(userName, password);
+            var user = await CreateUser(userName, password, firstName, lastName);
             await AssignRoleToUser(role, user);
             return user;
         }
 
-        private async Task<IdentityUser> CreateUser(string userName, string password)
+        private async Task<AppUser> CreateUser(string userName, string password, string firstName, string lastName)
         {
             if ((await userManager.FindByNameAsync(userName)) is not null)
                 throw new Exception("Username is already taken.");
 
-            var user = new IdentityUser
+            var user = new AppUser
             {
                 UserName = userName,
                 Email = userName,
                 EmailConfirmed = true,
+                FirstName = firstName,
+                LastName = lastName
             };
             var result = await userManager.CreateAsync(user, password);
             if (!result.Succeeded)
@@ -52,7 +55,7 @@ namespace Restaurant.WebApi.Services.User
             return user;
         }
 
-        private async Task<IdentityResult> AssignRoleToUser(string role, IdentityUser user)
+        private async Task<IdentityResult> AssignRoleToUser(string role, AppUser user)
         {
             var result = await userManager.AddToRoleAsync(user, role);
             if (!result.Succeeded)
@@ -84,7 +87,12 @@ namespace Restaurant.WebApi.Services.User
         {
             try
             {
-                var user = await CreateUserWithRole(request.Username, request.Password, Roles.REGULAR);
+                var user = await CreateUserWithRole(
+                    request.Username, 
+                    request.Password, 
+                    request.FirstName,
+                    request.LastName,
+                    Roles.REGULAR);
                 return new RegisterResponse
                 {
                     Message = "User registraion was successful."

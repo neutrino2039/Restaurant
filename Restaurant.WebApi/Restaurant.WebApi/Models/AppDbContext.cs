@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Restaurant.WebApi.Models
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
     }
