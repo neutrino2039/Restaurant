@@ -8,7 +8,13 @@ namespace Restaurant.WebApi.Controllers
         [NonAction]
         public IActionResult ApiResult(ApiResponse response)
         {
-            return response.IsSuccess ? Ok(response) : BadRequest(response);
+            return response.Errors is null ? Ok(response) : BadRequest(response);
+        }
+
+        [NonAction]
+        public IActionResult AuthorizationResult(ApiResponse response)
+        {
+            return response.Errors is null ? Ok(response) : Unauthorized(response);
         }
     }
 }

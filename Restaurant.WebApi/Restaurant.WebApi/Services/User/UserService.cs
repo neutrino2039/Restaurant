@@ -2,6 +2,7 @@
 using Restaurant.WebApi.Services.Token;
 using System;
 using System.Threading.Tasks;
+using static Restaurant.WebApi.Helpers.ErrorHelper;
 
 namespace Restaurant.WebApi.Services.User
 {
@@ -57,10 +58,8 @@ namespace Restaurant.WebApi.Services.User
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            if (request == null) throw new NullReferenceException("Request cannot be null.");
-
             var invalidCredentialsReponse =
-                new LoginResponse { IsSuccess = false, Message = "Invalid username or password." };
+                new LoginResponse { Errors = CreateError("Login", "Invalid username or password.") };
 
             var user = await userManager.FindByNameAsync(request.Username);
             if (user == null) return invalidCredentialsReponse;
@@ -72,7 +71,6 @@ namespace Restaurant.WebApi.Services.User
 
             return new LoginResponse
             {
-                IsSuccess = true,
                 Message = "Logged in successfully.",
                 Token = tokenService.GenerateToken(role, user)
             };

@@ -15,12 +15,10 @@ namespace Restaurant.WebApi.Controllers
             this.userService = userService;
         }
 
-        [HttpPost]
+        [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync(LoginRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest("Invalid request.");
-
-            return ApiResult(await userService.LoginAsync(request));
+            return AuthorizationResult(await userService.LoginAsync(request));
         }
     }
 }
