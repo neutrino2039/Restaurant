@@ -175,5 +175,23 @@ namespace Restaurant.WebApi.Services.User
 
             return userDeletedReponse;
         }
+
+        public async Task<GetUserResponse> GetUserByIdAsync(GetUserRequest request)
+        {
+            var user = await userManager.FindByIdAsync(request.Id);
+            if (user is null)
+                return new GetUserResponse
+                {
+                    Errors = CreateError("GetUserById", "User not found.")
+                };
+
+            return new GetUserResponse
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+        }
     }
 }

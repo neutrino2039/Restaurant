@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restaurant.WebApi.Constants;
 using Restaurant.WebApi.Services.User;
 using System.Threading.Tasks;
+using static Restaurant.WebApi.Helpers.ErrorHelper;
 
 namespace Restaurant.WebApi.Controllers
 {
@@ -48,6 +49,24 @@ namespace Restaurant.WebApi.Controllers
         public async Task<IActionResult> DeleteUserAsync(DeleteUserRequest request)
         {
             return ApiResult(await userService.DeleteUserAsync(request));
+        }
+
+        [Authorize(Roles = Roles.ALL)]
+        [HttpPost("GetUserById")]
+        public async Task<IActionResult> GetUserByIdAsync(GetUserRequest request)
+        {
+            if (CurrentUserNotAuthorizedFor(request.Id))
+                return AuthorizationResult(new GetUserResponse
+                {
+                    Errors = CreateError("GetUserById", "Unauthorized access.")
+                });
+
+            return ApiResult(await userService.GetUserByIdAsync(request));
+        }
+
+        private bool CurrentUserNotAuthorizedFor(string userId)
+        {
+            return !User.IsInRole(Roles.ADMIN) && User.Identity?.Name != userId;
         }
     }
 }
