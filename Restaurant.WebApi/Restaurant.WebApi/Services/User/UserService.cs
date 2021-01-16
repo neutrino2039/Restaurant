@@ -83,7 +83,7 @@ namespace Restaurant.WebApi.Services.User
             };
         }
 
-        public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
+        public async Task<CreateUserResponse> RegisterAsync(CreateUserRequest request)
         {
             try
             {
@@ -93,14 +93,14 @@ namespace Restaurant.WebApi.Services.User
                     request.FirstName,
                     request.LastName,
                     Roles.REGULAR);
-                return new RegisterResponse
+                return new CreateUserResponse
                 {
-                    Message = "User registraion was successful."
+                    Message = "User registration was successful."
                 };
             }
             catch (Exception e)
             {
-                return new RegisterResponse
+                return new CreateUserResponse
                 {
                     Errors = CreateError("Register", e.Message),
                 };

@@ -9,6 +9,6 @@ namespace Restaurant.WebApi.Services.User
         Task<IdentityResult> CreateRole(string role);
         Task<AppUser> CreateUserWithRole(string userName, string password, string firstName, string lastName, string role);
         Task<LoginResponse> LoginAsync(LoginRequest request);
-        Task<RegisterResponse> RegisterAsync(RegisterRequest request);
+        Task<CreateUserResponse> RegisterAsync(CreateUserRequest request);
     }
 }

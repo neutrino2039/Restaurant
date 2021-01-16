@@ -2,7 +2,7 @@
 
 namespace Restaurant.WebApi.Services.User
 {
-    public class RegisterResponse : ApiResponse
+    public class CreateUserResponse : ApiResponse
     {
     }
 }

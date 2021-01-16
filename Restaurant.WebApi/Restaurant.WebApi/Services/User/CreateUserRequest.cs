@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Restaurant.WebApi.Services.User
 {
-    public class RegisterRequest
+    public class CreateUserRequest
     {
         [Required]
         [StringLength(256, MinimumLength = 4)]
