@@ -207,5 +207,33 @@ namespace Restaurant.WebApi.Services.User
             });
             return new GetAllUsersResponse { Users = result.ToList() };
         }
+
+        public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            var invalidCredentialsReponse =
+                new ResetPasswordResponse
+                {
+                    Errors = CreateError("ResetPassword", "Invalid id or password.")
+                };
+
+            var user = await userManager.FindByIdAsync(request.Id);
+            if (user is null) return invalidCredentialsReponse;
+
+            if (!await userManager.CheckPasswordAsync(user, request.OldPassword))
+                return invalidCredentialsReponse;
+
+            var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await userManager.ResetPasswordAsync(user, resetToken, request.NewPassword);
+            if (!result.Succeeded)
+                return new ResetPasswordResponse
+                {
+                    Errors = CreateError("ResetPassword", "Unable to reset password.")
+                };
+
+            return new ResetPasswordResponse
+            {
+                Message = "Password reset successful."
+            };
+        }
     }
 }

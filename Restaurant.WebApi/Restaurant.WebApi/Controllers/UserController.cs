@@ -75,5 +75,18 @@ namespace Restaurant.WebApi.Controllers
         {
             return ApiResult(await userService.GetAllUsersAsync());
         }
+
+        [Authorize(Roles = Roles.ALL)]
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            if (CurrentUserNotAuthorizedFor(request.Id))
+                return AuthorizationResult(new ResetPasswordResponse
+                {
+                    Errors = CreateError("ResetPassword", "Unauthorized access.")
+                });
+
+            return ApiResult(await userService.ResetPasswordAsync(request));
+        }
     }
 }

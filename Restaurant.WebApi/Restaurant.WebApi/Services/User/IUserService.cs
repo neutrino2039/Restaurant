@@ -15,5 +15,6 @@ namespace Restaurant.WebApi.Services.User
         Task<DeleteUserResponse> DeleteUserAsync(DeleteUserRequest request);
         Task<GetUserResponse> GetUserByIdAsync(GetUserRequest request);
         Task<GetAllUsersResponse> GetAllUsersAsync();
+        Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
     }
 }
