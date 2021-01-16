@@ -3,6 +3,7 @@ using Restaurant.WebApi.Constants;
 using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.Token;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static Restaurant.WebApi.Helpers.ErrorHelper;
 
@@ -192,6 +193,19 @@ namespace Restaurant.WebApi.Services.User
                 FirstName = user.FirstName,
                 LastName = user.LastName
             };
+        }
+
+        public async Task<GetAllUsersResponse> GetAllUsersAsync()
+        {
+            var users = await Task.Run(() => userManager.Users);
+            var result = userManager.Users.Select(user => new GetUserResponse
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            });
+            return new GetAllUsersResponse { Users = result.ToList() };
         }
     }
 }

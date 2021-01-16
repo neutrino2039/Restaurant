@@ -68,5 +68,12 @@ namespace Restaurant.WebApi.Controllers
         {
             return !User.IsInRole(Roles.ADMIN) && User.Identity?.Name != userId;
         }
+
+        [Authorize(Roles = Roles.ADMIN)]
+        [HttpPost("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsersAsync()
+        {
+            return ApiResult(await userService.GetAllUsersAsync());
+        }
     }
 }
