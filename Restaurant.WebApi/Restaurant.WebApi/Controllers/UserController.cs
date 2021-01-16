@@ -20,5 +20,11 @@ namespace Restaurant.WebApi.Controllers
         {
             return AuthorizationResult(await userService.LoginAsync(request));
         }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterAsync(RegisterRequest request)
+        {
+            return ApiResult(await userService.RegisterAsync(request));
+        }
     }
 }

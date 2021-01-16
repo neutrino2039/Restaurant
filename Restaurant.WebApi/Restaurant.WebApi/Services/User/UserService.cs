@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Restaurant.WebApi.Constants;
 using Restaurant.WebApi.Services.Token;
 using System;
 using System.Threading.Tasks;
@@ -36,6 +37,9 @@ namespace Restaurant.WebApi.Services.User
 
         private async Task<IdentityUser> CreateUser(string userName, string password)
         {
+            if ((await userManager.FindByNameAsync(userName)) is not null)
+                throw new Exception("Username is already taken.");
+
             var user = new IdentityUser
             {
                 UserName = userName,
@@ -74,6 +78,25 @@ namespace Restaurant.WebApi.Services.User
                 Message = "Logged in successfully.",
                 Token = tokenService.GenerateToken(role, user)
             };
+        }
+
+        public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
+        {
+            try
+            {
+                var user = await CreateUserWithRole(request.Username, request.Password, Roles.REGULAR);
+                return new RegisterResponse
+                {
+                    Message = "User registraion was successful."
+                };
+            }
+            catch (Exception e)
+            {
+                return new RegisterResponse
+                {
+                    Errors = CreateError("Register", e.Message),
+                };
+            }
         }
     }
 }
