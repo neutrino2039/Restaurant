@@ -12,6 +12,7 @@ using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.Date;
 using Restaurant.WebApi.Services.Token;
 using Restaurant.WebApi.Services.User;
+using System;
 using System.Text;
 
 namespace Restaurant.WebApi
@@ -65,6 +66,26 @@ namespace Restaurant.WebApi
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
+                var jwtSecurityScheme = new OpenApiSecurityScheme
+                {
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Name = "JWT Authentication",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                c.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { jwtSecurityScheme, Array.Empty<string>() }
+                });
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurant.WebApi", Version = "v1" });
             });
 

@@ -106,5 +106,29 @@ namespace Restaurant.WebApi.Services.User
                 };
             }
         }
+
+        public async Task<CreateUserResponse> CreateOwnerAsync(CreateUserRequest request)
+        {
+            try
+            {
+                var user = await CreateUserWithRole(
+                    request.Username,
+                    request.Password,
+                    request.FirstName,
+                    request.LastName,
+                    Roles.OWNER);
+                return new CreateUserResponse
+                {
+                    Message = "Owner creation was successful."
+                };
+            }
+            catch (Exception e)
+            {
+                return new CreateUserResponse
+                {
+                    Errors = CreateError("CreateOwner", e.Message),
+                };
+            }
+        }
     }
 }

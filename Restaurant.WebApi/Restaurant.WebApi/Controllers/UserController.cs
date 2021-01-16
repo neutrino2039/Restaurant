@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Restaurant.WebApi.Constants;
 using Restaurant.WebApi.Services.User;
 using System.Threading.Tasks;
 
@@ -25,6 +27,13 @@ namespace Restaurant.WebApi.Controllers
         public async Task<IActionResult> RegisterAsync(CreateUserRequest request)
         {
             return ApiResult(await userService.RegisterAsync(request));
+        }
+
+        [Authorize(Roles = Roles.ADMIN)]
+        [HttpPost("CreateOwner")]
+        public async Task<IActionResult> CreateOwnerAsync(CreateUserRequest request)
+        {
+            return ApiResult(await userService.CreateOwnerAsync(request));
         }
     }
 }
