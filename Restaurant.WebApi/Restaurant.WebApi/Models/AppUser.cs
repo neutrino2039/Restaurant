@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Restaurant.WebApi.Models
@@ -12,5 +13,7 @@ namespace Restaurant.WebApi.Models
 
         [Column(TypeName = "nvarchar(50)")]
         public string LastName { get; set; }
+
+        public ICollection<Restaurant> Restaurants { get; set; }
     }
 }
