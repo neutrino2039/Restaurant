@@ -6,5 +6,6 @@ namespace Restaurant.WebApi.Services.Restaurant
     public interface IRestaurantService
     {
         Task<UploadImageResponse> UploadImageAsync(IFormFile image);
+        Task<CreateRestaurantResponse> CreateRestaurantAsync(string userId, CreateRestaurantRequest request);
     }
 }
