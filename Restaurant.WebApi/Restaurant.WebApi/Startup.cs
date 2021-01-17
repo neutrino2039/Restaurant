@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.Date;
+using Restaurant.WebApi.Services.Restaurant;
 using Restaurant.WebApi.Services.Token;
 using Restaurant.WebApi.Services.User;
 using System;
@@ -92,6 +93,7 @@ namespace Restaurant.WebApi
             services.AddTransient<IDateService, SystemDateService>();
             services.AddTransient<ITokenService, JwtTokenService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddTransient<IRestaurantService, RestaurantService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,6 +112,8 @@ namespace Restaurant.WebApi
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
