@@ -52,5 +52,30 @@ namespace Restaurant.WebApi.Services.Restaurant
                 Message = "Restaurant creation successful."
             };
         }
+
+        public async Task<UpdateRestaurantResponse> UpdateRestaurantAsync(UpdateRestaurantRequest request)
+        {
+            var restaurant = await db.Restaurants.FindAsync(request.Id);
+            if (restaurant is null)
+                return new UpdateRestaurantResponse
+                {
+                    Errors = CreateError("UpdateRestaurant", "Restaurant not found.")
+                };
+
+            restaurant.Name = request.Name;
+            restaurant.Address = request.Address;
+            restaurant.Image = request.ImageName;
+            var result = await db.SaveChangesAsync();
+            if (result != 1)
+                return new UpdateRestaurantResponse
+                {
+                    Errors = CreateError("UpdateRestaurant", "Unable to update restaurant.")
+                };
+
+            return new UpdateRestaurantResponse
+            {
+                Message = "Restaurant update successful."
+            };
+        }
     }
 }
