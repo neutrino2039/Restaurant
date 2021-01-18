@@ -8,5 +8,6 @@ namespace Restaurant.WebApi.Services.Review
         Task<UpdateReviewResponse> UpdateReviewAsync(UpdateReviewRequest request);
         Task<DeleteReviewResponse> DeleteReviewAsync(DeleteReviewRequest request);
         Task<GetReviewResponse> GetReviewByIdAsync(GetReviewRequest request);
+        Task<GetAllReviewsResponse> GetAllReviewsAsync();
     }
 }
