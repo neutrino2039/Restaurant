@@ -10,5 +10,6 @@ namespace Restaurant.WebApi.Models
         public AppDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Restaurant> Restaurants { get; set; }
+        public DbSet<Review> Reviews { get; set; }
     }
 }

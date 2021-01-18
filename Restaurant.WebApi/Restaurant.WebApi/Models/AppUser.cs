@@ -15,5 +15,7 @@ namespace Restaurant.WebApi.Models
         public string LastName { get; set; }
 
         public ICollection<Restaurant> Restaurants { get; set; }
+
+        public ICollection<Review> Reviews { get; set; }
     }
 }

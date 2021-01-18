@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Restaurant.WebApi.Models
@@ -19,5 +20,7 @@ namespace Restaurant.WebApi.Models
 
         public AppUser Owner { get; set; }
         public string OwnerId { get; set; }
+
+        public ICollection<Review> Reviews { get; set; }
     }
 }
