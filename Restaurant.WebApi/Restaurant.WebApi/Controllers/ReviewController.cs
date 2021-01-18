@@ -30,5 +30,12 @@ namespace Restaurant.WebApi.Controllers
         {
             return ApiResult(await reviewService.UpdateReviewAsync(request));
         }
+
+        [Authorize(Roles = Roles.ADMIN)]
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeleteReviewAsync(DeleteReviewRequest request)
+        {
+            return ApiResult(await reviewService.DeleteReviewAsync(request));
+        }
     }
 }

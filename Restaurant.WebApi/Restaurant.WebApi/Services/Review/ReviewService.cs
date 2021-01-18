@@ -56,6 +56,28 @@ namespace Restaurant.WebApi.Services.Review
             };
         }
 
+        public async Task<DeleteReviewResponse> DeleteReviewAsync(DeleteReviewRequest request)
+        {
+            var reviewDeletedResponse = new DeleteReviewResponse
+            {
+                Message = "Review deletion successful."
+            };
+
+            var review = await db.Reviews.FindAsync(request.Id);
+            if (review is null)
+                return reviewDeletedResponse;
+
+            db.Reviews.Remove(review);
+            var result = await db.SaveChangesAsync();
+            if (result != 1)
+                return new DeleteReviewResponse
+                {
+                    Errors = CreateError("DeleteReview", "Unable to delete review.")
+                };
+
+            return reviewDeletedResponse;
+        }
+
         public async Task<UpdateReviewResponse> UpdateReviewAsync(UpdateReviewRequest request)
         {
             var review = await db.Reviews.FindAsync(request.Id);
