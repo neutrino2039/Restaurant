@@ -78,6 +78,27 @@ namespace Restaurant.WebApi.Services.Review
             return reviewDeletedResponse;
         }
 
+        public async Task<GetReviewResponse> GetReviewByIdAsync(GetReviewRequest request)
+        {
+            var review = await db.Reviews.FindAsync(request.Id);
+            if (review is null)
+                return new GetReviewResponse
+                {
+                    Errors = CreateError("GetReviewById", "Review not found")
+                };
+
+            return new GetReviewResponse
+            {
+                Id = review.Id,
+                RestaurantId = review.RestaurantId,
+                UserId = review.UserId,
+                Stars = review.Stars,
+                Comment = review.Comment,
+                VisitDate = review.VisitDate,
+                Reply = review.Reply
+            };
+        }
+
         public async Task<UpdateReviewResponse> UpdateReviewAsync(UpdateReviewRequest request)
         {
             var review = await db.Reviews.FindAsync(request.Id);

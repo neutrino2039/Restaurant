@@ -7,5 +7,6 @@ namespace Restaurant.WebApi.Services.Review
         Task<CreateReviewResponse> CreateReviewAsync(string userId, CreateReviewRequest request);
         Task<UpdateReviewResponse> UpdateReviewAsync(UpdateReviewRequest request);
         Task<DeleteReviewResponse> DeleteReviewAsync(DeleteReviewRequest request);
+        Task<GetReviewResponse> GetReviewByIdAsync(GetReviewRequest request);
     }
 }
