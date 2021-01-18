@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Restaurant.WebApi.Services.Date;
+using Restaurant.WebApi.Services.DateTime;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,12 +12,12 @@ namespace Restaurant.WebApi.Services.Token
     {
 
         private IConfiguration configuration;
-        private IDateService dateService;
+        private IDateTimeService dateTimeService;
 
-        public JwtTokenService(IConfiguration configuration, IDateService dateService)
+        public JwtTokenService(IConfiguration configuration, IDateTimeService dateTimeService)
         {
             this.configuration = configuration;
-            this.dateService = dateService;
+            this.dateTimeService = dateTimeService;
         }
 
         public string GenerateToken(string role, IdentityUser user)
@@ -35,7 +35,7 @@ namespace Restaurant.WebApi.Services.Token
                 issuer: issuer,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
                 claims: claims,
-                expires: dateService.Now.AddDays(30));
+                expires: dateTimeService.Now.AddDays(30));
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

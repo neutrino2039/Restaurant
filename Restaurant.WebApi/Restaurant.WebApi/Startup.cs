@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Restaurant.WebApi.Models;
-using Restaurant.WebApi.Services.Date;
+using Restaurant.WebApi.Services.DateTime;
 using Restaurant.WebApi.Services.Restaurant;
 using Restaurant.WebApi.Services.Review;
 using Restaurant.WebApi.Services.Token;
@@ -91,7 +91,7 @@ namespace Restaurant.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurant.WebApi", Version = "v1" });
             });
 
-            services.AddTransient<IDateService, SystemDateService>();
+            services.AddTransient<IDateTimeService, UtcDateTimeService>();
             services.AddTransient<ITokenService, JwtTokenService>();
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IRestaurantService, RestaurantService>();
