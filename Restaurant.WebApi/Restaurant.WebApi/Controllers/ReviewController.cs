@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restaurant.WebApi.Constants;
 using Restaurant.WebApi.Services.Review;
 using System.Threading.Tasks;
+using static Restaurant.WebApi.Helpers.ErrorHelper;
 
 namespace Restaurant.WebApi.Controllers
 {
@@ -50,6 +51,18 @@ namespace Restaurant.WebApi.Controllers
         public async Task<IActionResult> GetAllReviewsAsync()
         {
             return ApiResult(await reviewService.GetAllReviewsAsync());
+        }
+
+        [Authorize(Roles = Roles.OWNER)]
+        [HttpPost("ReplyToReview")]
+        public async Task<IActionResult> ReplyToReview(ReplyToReviewRequest request)
+        {
+            if (!await reviewService.IsOwnerAuthorizedToReply(User.Identity!.Name!, request.Id))
+                return AuthorizationResult(new ReplyToReviewResponse
+                {
+                    Errors = CreateError("ReplyToReview", "Unauthorized access.")
+                });
+            return ApiResult(await reviewService.ReplyToReviewAsync(request));
         }
     }
 }

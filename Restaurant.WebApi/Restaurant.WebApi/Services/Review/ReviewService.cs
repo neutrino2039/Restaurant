@@ -1,4 +1,5 @@
-﻿using Restaurant.WebApi.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.DateTime;
 using System.Linq;
 using System.Threading.Tasks;
@@ -102,7 +103,7 @@ namespace Restaurant.WebApi.Services.Review
             if (review is null)
                 return new GetReviewResponse
                 {
-                    Errors = CreateError("GetReviewById", "Review not found")
+                    Errors = CreateError("GetReviewById", "Review not found.")
                 };
 
             return new GetReviewResponse
@@ -117,13 +118,47 @@ namespace Restaurant.WebApi.Services.Review
             };
         }
 
+        public async Task<bool> IsOwnerAuthorizedToReply(string ownerId, int reviewId)
+        {
+            var review = await db.Reviews
+                .Where(r => r.Id == reviewId)
+                .Include(r => r.Restaurant)
+                .FirstOrDefaultAsync();
+            if (review is null) return false;
+
+            return review.Restaurant.OwnerId == ownerId;
+        }
+
+        public async Task<ReplyToReviewResponse> ReplyToReviewAsync(ReplyToReviewRequest request)
+        {
+            var review = await db.Reviews.FindAsync(request.Id);
+            if (review is null)
+                return new ReplyToReviewResponse
+                {
+                    Errors = CreateError("ReplyToReview", "Review not found.")
+                };
+
+            review.Reply = request.Reply;
+            var resullt = await db.SaveChangesAsync();
+            if (resullt != 1)
+                return new ReplyToReviewResponse
+                {
+                    Errors = CreateError("ReplyToReview", "Unable to save the reply.")
+                };
+
+            return new ReplyToReviewResponse
+            {
+                Message = "Reply save successful."
+            };
+        }
+
         public async Task<UpdateReviewResponse> UpdateReviewAsync(UpdateReviewRequest request)
         {
             var review = await db.Reviews.FindAsync(request.Id);
             if (review is null)
                 return new UpdateReviewResponse
                 {
-                    Errors = CreateError("UpdateReview", "Review not found")
+                    Errors = CreateError("UpdateReview", "Review not found.")
                 };
 
             review.Stars = request.Stars;

@@ -9,5 +9,7 @@ namespace Restaurant.WebApi.Services.Review
         Task<DeleteReviewResponse> DeleteReviewAsync(DeleteReviewRequest request);
         Task<GetReviewResponse> GetReviewByIdAsync(GetReviewRequest request);
         Task<GetAllReviewsResponse> GetAllReviewsAsync();
+        Task<ReplyToReviewResponse> ReplyToReviewAsync(ReplyToReviewRequest request);
+        Task<bool> IsOwnerAuthorizedToReply(string ownerId, int reviewId);
     }
 }
