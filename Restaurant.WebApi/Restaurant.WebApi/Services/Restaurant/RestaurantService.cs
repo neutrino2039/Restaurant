@@ -77,5 +77,29 @@ namespace Restaurant.WebApi.Services.Restaurant
                 Message = "Restaurant update successful."
             };
         }
+
+        public async Task<DeleteRestaurantResponse> DeleteRestaurantAsync(DeleteRestaurantRequest request)
+        {
+            var userDeletedResponse = new DeleteRestaurantResponse
+            {
+                Message = "Restaurant delete succssful."
+            };
+            var restaurant = await db.Restaurants.FindAsync(request.Id);
+            if (restaurant is null)
+                return userDeletedResponse;
+
+            db.Restaurants.Remove(restaurant);
+            var result = await db.SaveChangesAsync();
+            if (result != 1)
+                return new DeleteRestaurantResponse
+                {
+                    Errors = CreateError("DeleteRestaurant", "Unable to delete restaurant.")
+                };
+
+            return new DeleteRestaurantResponse
+            {
+                Message = "Restaurant delete successful."
+            };
+        }
     }
 }

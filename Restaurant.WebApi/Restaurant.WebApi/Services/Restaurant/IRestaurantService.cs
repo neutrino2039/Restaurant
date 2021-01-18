@@ -8,5 +8,6 @@ namespace Restaurant.WebApi.Services.Restaurant
         Task<UploadImageResponse> UploadImageAsync(IFormFile image);
         Task<CreateRestaurantResponse> CreateRestaurantAsync(string userId, CreateRestaurantRequest request);
         Task<UpdateRestaurantResponse> UpdateRestaurantAsync(UpdateRestaurantRequest request);
+        Task<DeleteRestaurantResponse> DeleteRestaurantAsync(DeleteRestaurantRequest request);
     }
 }
