@@ -55,5 +55,30 @@ namespace Restaurant.WebApi.Services.Review
                 Message = "Review creation successful."
             };
         }
+
+        public async Task<UpdateReviewResponse> UpdateReviewAsync(UpdateReviewRequest request)
+        {
+            var review = await db.Reviews.FindAsync(request.Id);
+            if (review is null)
+                return new UpdateReviewResponse
+                {
+                    Errors = CreateError("UpdateReview", "Review not found")
+                };
+
+            review.Stars = request.Stars;
+            review.Comment = request.Comment;
+            review.Reply = review.Reply is null ? null : request.Reply;
+            var result = await db.SaveChangesAsync();
+            if (result != 1)
+                return new UpdateReviewResponse
+                {
+                    Errors = CreateError("UpdateReview", "Unable to update review.")
+                };
+
+            return new UpdateReviewResponse
+            {
+                Message = "Review update successful."
+            };
+        }
     }
 }

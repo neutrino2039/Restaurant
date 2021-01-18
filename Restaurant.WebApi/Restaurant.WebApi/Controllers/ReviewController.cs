@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.WebApi.Constants;
 using Restaurant.WebApi.Services.Review;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Restaurant.WebApi.Controllers
@@ -26,6 +22,13 @@ namespace Restaurant.WebApi.Controllers
         public async Task<IActionResult> CreateReviewAsync(CreateReviewRequest request)
         {
             return ApiResult(await reviewService.CreateReviewAsync(User.Identity!.Name!, request));
+        }
+
+        [Authorize(Roles = Roles.ADMIN)]
+        [HttpPost("Update")]
+        public async Task<IActionResult> UpdateReviewAsync(UpdateReviewRequest request)
+        {
+            return ApiResult(await reviewService.UpdateReviewAsync(request));
         }
     }
 }
