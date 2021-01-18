@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.Date;
 using Restaurant.WebApi.Services.Restaurant;
+using Restaurant.WebApi.Services.Review;
 using Restaurant.WebApi.Services.Token;
 using Restaurant.WebApi.Services.User;
 using System;
@@ -94,6 +95,7 @@ namespace Restaurant.WebApi
             services.AddTransient<ITokenService, JwtTokenService>();
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IRestaurantService, RestaurantService>();
+            services.AddTransient<IReviewService, ReviewService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
