@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Restaurant.WebApi.Models;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using static Restaurant.WebApi.Helpers.ErrorHelper;
 
@@ -121,6 +122,21 @@ namespace Restaurant.WebApi.Services.Restaurant
                 Name = restaurant.Name,
                 Address = restaurant.Address,
                 ImageName = restaurant.Image
+            };
+        }
+
+        public async Task<GetAllRestaurantsResponse> GetAllRestaurantsAsync()
+        {
+            var restaurants = db.Restaurants.Select(restaurant => new GetRestaurantResponse
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Address = restaurant.Address,
+                ImageName = restaurant.Image
+            });
+            return new GetAllRestaurantsResponse
+            {
+                Restaurants = await Task.Run(() => restaurants.ToList())
             };
         }
     }
