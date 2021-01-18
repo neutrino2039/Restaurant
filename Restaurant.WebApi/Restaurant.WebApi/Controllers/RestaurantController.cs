@@ -75,5 +75,12 @@ namespace Restaurant.WebApi.Controllers
         {
             return ApiResult(await restaurantService.DeleteRestaurantAsync(request));
         }
+
+        [Authorize(Roles = Roles.ALL)]
+        [HttpPost("GetById")]
+        public async Task<IActionResult> GetRestaurantByIdAsync(GetRestaurantRequest request)
+        {
+            return ApiResult(await restaurantService.GetRestaurantByIdAsync(request));
+        }
     }
 }

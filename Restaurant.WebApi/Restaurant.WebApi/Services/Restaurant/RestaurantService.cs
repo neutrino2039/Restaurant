@@ -106,5 +106,22 @@ namespace Restaurant.WebApi.Services.Restaurant
                 Message = "Restaurant delete successful."
             };
         }
+
+        public async Task<GetRestaurantResponse> GetRestaurantByIdAsync(GetRestaurantRequest request)
+        {
+            var restaurant = await db.Restaurants.FindAsync(request.Id);
+            if (restaurant is null)
+                return new GetRestaurantResponse
+                {
+                    Errors = CreateError("GetRestaurantById", "Restaurant not found")
+                };
+            return new GetRestaurantResponse
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Address = restaurant.Address,
+                ImageName = restaurant.Image
+            };
+        }
     }
 }
