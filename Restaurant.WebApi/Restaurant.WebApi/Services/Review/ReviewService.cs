@@ -30,7 +30,8 @@ namespace Restaurant.WebApi.Services.Review
                 RestaurantId = request.RestaurantId,
                 UserId = userId,
                 Stars = request.Stars,
-                Comment = request.Comment
+                Comment = request.Comment,
+                VisitDate = dateTimeService.Now
             };
             db.Reviews.Add(review);
             var result = await db.SaveChangesAsync();
