@@ -25,7 +25,7 @@ namespace Restaurant.WebApi.Controllers
             this.configuration = configuration;
         }
 
-        [Authorize(Roles = Roles.OWNER)]
+        [Authorize(Roles = Roles.ADMIN_OR_OWNER)]
         [HttpPost("UploadImage")]
         public async Task<IActionResult> UploadImageAsync([Required] IFormFile image)
         {

@@ -62,6 +62,9 @@ namespace Restaurant.WebApi.Services.Restaurant
                     Errors = CreateError("UpdateRestaurant", "Restaurant not found.")
                 };
 
+            if (restaurant.Image != request.ImageName)
+                File.Delete(Path.Combine(environment.WebRootPath, "Images", restaurant.Image));
+
             restaurant.Name = request.Name;
             restaurant.Address = request.Address;
             restaurant.Image = request.ImageName;
@@ -95,6 +98,8 @@ namespace Restaurant.WebApi.Services.Restaurant
                 {
                     Errors = CreateError("DeleteRestaurant", "Unable to delete restaurant.")
                 };
+
+            File.Delete(Path.Combine(environment.WebRootPath, "Images", restaurant.Image));
 
             return new DeleteRestaurantResponse
             {
