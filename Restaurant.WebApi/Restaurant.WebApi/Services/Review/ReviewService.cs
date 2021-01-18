@@ -1,5 +1,6 @@
 ﻿using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.DateTime;
+using System.Linq;
 using System.Threading.Tasks;
 using static Restaurant.WebApi.Helpers.ErrorHelper;
 
@@ -23,6 +24,14 @@ namespace Restaurant.WebApi.Services.Review
                 return new CreateReviewResponse
                 {
                     Errors = CreateError("CreateReview", "Restaurant not found.")
+                };
+
+            var hasUserAlreadyCreatedReview = db.Reviews.Any(r =>
+                r.UserId == userId && r.RestaurantId == request.RestaurantId);
+            if (hasUserAlreadyCreatedReview)
+                return new CreateReviewResponse
+                {
+                    Errors = CreateError("CreateReview", "Multple reviews are not allowed.")
                 };
 
             var review = new Models.Review
