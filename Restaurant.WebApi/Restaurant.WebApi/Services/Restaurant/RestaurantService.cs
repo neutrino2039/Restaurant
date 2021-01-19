@@ -126,7 +126,8 @@ namespace Restaurant.WebApi.Services.Restaurant
             };
         }
 
-        public async Task<GetAllRestaurantsResponse> GetAllRestaurantsAsync(GetAllRestaurantRequest request)
+        public async Task<GetAllRestaurantsResponse> GetAllRestaurantsAsync(string userId,
+            bool showOwnedOnly, GetAllRestaurantRequest request)
         {
             var restaurantsWithReviews = db.Restaurants
                 .Include(r => r.Reviews)
@@ -137,7 +138,8 @@ namespace Restaurant.WebApi.Services.Restaurant
                     Name = r.Name,
                     Address = r.Address,
                     ImageName = r.Image,
-                    AverageStars = r.Reviews.Average(r => r.Stars)
+                    AverageStars = r.Reviews.Average(r => r.Stars),
+                    OwnerId = r.OwnerId
                 });
             var restaurantsWithoutReviews = db.Restaurants
                 .Include(r => r.Reviews)
@@ -148,7 +150,8 @@ namespace Restaurant.WebApi.Services.Restaurant
                     Name = r.Name,
                     Address = r.Address,
                     ImageName = r.Image,
-                    AverageStars = 0
+                    AverageStars = 0,
+                    OwnerId = r.OwnerId
                 });
             var allRestaurants = restaurantsWithReviews.Union(restaurantsWithoutReviews);
 
@@ -172,6 +175,9 @@ namespace Restaurant.WebApi.Services.Restaurant
                     r.AverageStars >= request.StarsFrom
                     && r.AverageStars <= request.StarsTo);
             }
+
+            if (showOwnedOnly)
+                allRestaurants = allRestaurants.Where(r => r.OwnerId == userId);
 
             return new GetAllRestaurantsResponse
             {

@@ -87,7 +87,9 @@ namespace Restaurant.WebApi.Controllers
         [HttpPost("GetAll")]
         public async Task<IActionResult> GetAllRestaurantsAsync(GetAllRestaurantRequest request)
         {
-            return ApiResult(await restaurantService.GetAllRestaurantsAsync(request));
+            var showOwnedOnly = User.IsInRole(Roles.OWNER);
+            return ApiResult(await restaurantService.GetAllRestaurantsAsync(
+                User.Identity!.Name!, showOwnedOnly, request));
         }
     }
 }
