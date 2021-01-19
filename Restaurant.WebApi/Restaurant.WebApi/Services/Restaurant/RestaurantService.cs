@@ -139,7 +139,8 @@ namespace Restaurant.WebApi.Services.Restaurant
                     Address = r.Address,
                     ImageName = r.Image,
                     AverageStars = r.Reviews.Average(r => r.Stars),
-                    OwnerId = r.OwnerId
+                    OwnerId = r.OwnerId,
+                    PendingReplies = r.Reviews.Count(r => r.Reply == null)
                 });
             var restaurantsWithoutReviews = db.Restaurants
                 .Include(r => r.Reviews)
@@ -151,7 +152,8 @@ namespace Restaurant.WebApi.Services.Restaurant
                     Address = r.Address,
                     ImageName = r.Image,
                     AverageStars = 0,
-                    OwnerId = r.OwnerId
+                    OwnerId = r.OwnerId,
+                    PendingReplies = 0
                 });
             var allRestaurants = restaurantsWithReviews.Union(restaurantsWithoutReviews);
 
