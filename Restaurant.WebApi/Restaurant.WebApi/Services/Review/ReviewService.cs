@@ -118,6 +118,26 @@ namespace Restaurant.WebApi.Services.Review
             };
         }
 
+        public async Task<GetReviewsPendingReplyResponse> GetReviewsPendingReplyAsync(GetReviewsPendingReplyRequest request)
+        {
+            var reviews = db.Reviews
+                .Where(r => r.RestaurantId == request.RestaurantId && r.Reply == null)
+                .Select(r => new GetReviewResponse
+                {
+                    Id = r.Id,
+                    RestaurantId = r.RestaurantId,
+                    UserId = r.UserId,
+                    Stars = r.Stars,
+                    Comment = r.Comment,
+                    VisitDate = r.VisitDate,
+                    Reply = r.Reply
+                });
+            return new GetReviewsPendingReplyResponse
+            {
+                Reviews = await Task.Run(() => reviews.ToList())
+            };
+        }
+
         public async Task<bool> IsOwnerAuthorizedToReply(string ownerId, int reviewId)
         {
             var review = await db.Reviews

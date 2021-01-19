@@ -11,5 +11,6 @@ namespace Restaurant.WebApi.Services.Review
         Task<GetAllReviewsResponse> GetAllReviewsAsync();
         Task<ReplyToReviewResponse> ReplyToReviewAsync(ReplyToReviewRequest request);
         Task<bool> IsOwnerAuthorizedToReply(string ownerId, int reviewId);
+        Task<GetReviewsPendingReplyResponse> GetReviewsPendingReplyAsync(GetReviewsPendingReplyRequest request);
     }
 }

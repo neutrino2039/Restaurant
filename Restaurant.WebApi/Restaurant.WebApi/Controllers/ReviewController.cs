@@ -64,5 +64,12 @@ namespace Restaurant.WebApi.Controllers
                 });
             return ApiResult(await reviewService.ReplyToReviewAsync(request));
         }
+
+        [Authorize(Roles = Roles.OWNER)]
+        [HttpPost("GetReviewsPendingReply")]
+        public async Task<IActionResult> GetReviewsPendingReplyAsync(GetReviewsPendingReplyRequest request)
+        {
+            return ApiResult(await reviewService.GetReviewsPendingReplyAsync(request));
+        }
     }
 }
