@@ -10,6 +10,6 @@ namespace Restaurant.WebApi.Services.Restaurant
         Task<UpdateRestaurantResponse> UpdateRestaurantAsync(UpdateRestaurantRequest request);
         Task<DeleteRestaurantResponse> DeleteRestaurantAsync(DeleteRestaurantRequest request);
         Task<GetRestaurantResponse> GetRestaurantByIdAsync(GetRestaurantRequest request);
-        Task<GetAllRestaurantsResponse> GetAllRestaurantsAsync();
+        Task<GetAllRestaurantsResponse> GetAllRestaurantsAsync(GetAllRestaurantRequest request);
     }
 }

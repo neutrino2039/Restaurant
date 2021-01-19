@@ -85,9 +85,9 @@ namespace Restaurant.WebApi.Controllers
 
         [Authorize(Roles = Roles.ALL)]
         [HttpPost("GetAll")]
-        public async Task<IActionResult> GetAllRestaurantsAsync()
+        public async Task<IActionResult> GetAllRestaurantsAsync(GetAllRestaurantRequest request)
         {
-            return ApiResult(await restaurantService.GetAllRestaurantsAsync());
+            return ApiResult(await restaurantService.GetAllRestaurantsAsync(request));
         }
     }
 }

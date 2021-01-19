@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Restaurant.WebApi.Models;
 using System.IO;
 using System.Linq;
@@ -125,18 +126,56 @@ namespace Restaurant.WebApi.Services.Restaurant
             };
         }
 
-        public async Task<GetAllRestaurantsResponse> GetAllRestaurantsAsync()
+        public async Task<GetAllRestaurantsResponse> GetAllRestaurantsAsync(GetAllRestaurantRequest request)
         {
-            var restaurants = db.Restaurants.Select(restaurant => new GetRestaurantResponse
+            var restaurantsWithReviews = db.Restaurants
+                .Include(r => r.Reviews)
+                .Where(r => r.Reviews.Count > 0)
+                .Select(r => new GetRestaurantResponse
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Address = r.Address,
+                    ImageName = r.Image,
+                    AverageStars = r.Reviews.Average(r => r.Stars)
+                });
+            var restaurantsWithoutReviews = db.Restaurants
+                .Include(r => r.Reviews)
+                .Where(r => r.Reviews.Count == 0)
+                .Select(r => new GetRestaurantResponse
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Address = r.Address,
+                    ImageName = r.Image,
+                    AverageStars = 0
+                });
+            var allRestaurants = restaurantsWithReviews.Union(restaurantsWithoutReviews);
+
+            if (request.Sort)
             {
-                Id = restaurant.Id,
-                Name = restaurant.Name,
-                Address = restaurant.Address,
-                ImageName = restaurant.Image
-            });
+                if (request.SortDirection == SortDirection.Desc)
+                    allRestaurants = allRestaurants.OrderByDescending(r => r.AverageStars);
+                else
+                    allRestaurants = allRestaurants.OrderBy(r => r.AverageStars);
+            }
+
+            if (request.Filter)
+            {
+                if (request.StarsFrom > request.StarsTo)
+                {
+                    var temp = request.StarsFrom;
+                    request.StarsFrom = request.StarsTo;
+                    request.StarsTo = temp;
+                }
+                allRestaurants = allRestaurants.Where(r =>
+                    r.AverageStars >= request.StarsFrom
+                    && r.AverageStars <= request.StarsTo);
+            }
+
             return new GetAllRestaurantsResponse
             {
-                Restaurants = await Task.Run(() => restaurants.ToList())
+                Restaurants = await Task.Run(() => allRestaurants.ToList())
             };
         }
     }

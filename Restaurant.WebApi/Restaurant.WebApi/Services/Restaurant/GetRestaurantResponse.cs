@@ -13,5 +13,6 @@ namespace Restaurant.WebApi.Services.Restaurant
         public string Address { get; set; }
 
         public string ImageName { get; set; }
+        public double AverageStars { get; set; }
     }
 }

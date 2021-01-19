@@ -16,6 +16,7 @@ using Restaurant.WebApi.Services.Token;
 using Restaurant.WebApi.Services.User;
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Restaurant.WebApi
 {
@@ -65,7 +66,9 @@ namespace Restaurant.WebApi
                     };
                 });
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => 
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
             services.AddSwaggerGen(c =>
             {
                 var jwtSecurityScheme = new OpenApiSecurityScheme
