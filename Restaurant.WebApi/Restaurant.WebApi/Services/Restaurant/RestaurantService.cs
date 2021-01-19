@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Restaurant.WebApi.Models;
+using Restaurant.WebApi.Services.Review;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -185,6 +186,66 @@ namespace Restaurant.WebApi.Services.Restaurant
             {
                 Restaurants = await Task.Run(() => allRestaurants.ToList())
             };
+        }
+
+        public async Task<GetDetailsResponse> GetDetailsAsync(GetDetailsRequest request)
+        {
+            var restaurantId = request.Id;
+            var details = new GetDetailsResponse();
+
+            var restaurant = db.Restaurants
+                .Where(r => r.Id == restaurantId)
+                .Include(r => r.Reviews);
+
+            details.AverageRating = await Task.Run(() =>
+                restaurant.Select(r => r.Reviews.Average(r => r.Stars)).FirstOrDefault());
+
+            var maxStars = await Task.Run(() => 
+                db.Reviews.Where(r => r.RestaurantId == restaurantId).Max(r => r.Stars));
+            details.HighestRatedReview = await Task.Run(() => db.Reviews
+                .Where(r => r.RestaurantId == restaurantId && r.Stars == maxStars)
+                .Select(r => new GetReviewResponse
+                {
+                    Id = r.Id,
+                    RestaurantId = r.RestaurantId,
+                    UserId = r.UserId,
+                    Stars = r.Stars,
+                    Comment = r.Comment,
+                    VisitDate = r.VisitDate,
+                    Reply = r.Reply
+                }).FirstOrDefault());
+
+            var minStars = await Task.Run(() => 
+                db.Reviews.Where(r => r.RestaurantId == restaurantId).Min(r => r.Stars));
+            details.LowestRatedReview = await Task.Run(() => db.Reviews
+                .Where(r => r.RestaurantId == restaurantId && r.Stars == minStars)
+                .Select(r => new GetReviewResponse
+                {
+                    Id = r.Id,
+                    RestaurantId = r.RestaurantId,
+                    UserId = r.UserId,
+                    Stars = r.Stars,
+                    Comment = r.Comment,
+                    VisitDate = r.VisitDate,
+                    Reply = r.Reply
+                }).FirstOrDefault());
+
+            var last = await Task.Run(() => 
+                db.Reviews.Where(r => r.RestaurantId == restaurantId).Max(r => r.Id));
+            details.LastReview = await Task.Run(() => db.Reviews
+                .Where(r => r.RestaurantId == restaurantId && r.Id == last)
+                .Select(r => new GetReviewResponse
+                {
+                    Id = r.Id,
+                    RestaurantId = r.RestaurantId,
+                    UserId = r.UserId,
+                    Stars = r.Stars,
+                    Comment = r.Comment,
+                    VisitDate = r.VisitDate,
+                    Reply = r.Reply
+                }).FirstOrDefault());
+
+            return details;
         }
     }
 }

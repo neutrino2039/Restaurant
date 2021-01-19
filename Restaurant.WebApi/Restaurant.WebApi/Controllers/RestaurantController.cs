@@ -91,5 +91,12 @@ namespace Restaurant.WebApi.Controllers
             return ApiResult(await restaurantService.GetAllRestaurantsAsync(
                 User.Identity!.Name!, showOwnedOnly, request));
         }
+
+        [Authorize(Roles = Roles.ALL)]
+        [HttpPost("GetDetails")]
+        public async Task<IActionResult> GetDetailsAsync(GetDetailsRequest request)
+        {
+            return ApiResult(await restaurantService.GetDetailsAsync(request));
+        }
     }
 }
