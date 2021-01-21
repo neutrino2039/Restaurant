@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.WebApi.Constants;
+using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.User;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Restaurant.WebApi.Seeders
@@ -11,6 +14,9 @@ namespace Restaurant.WebApi.Seeders
     {
         public static async Task SeedDataAsync(IServiceProvider serviceProvider)
         {
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            if (userManager.Users.Any()) return;
+
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var userService = serviceProvider.GetRequiredService<IUserService>();
 
