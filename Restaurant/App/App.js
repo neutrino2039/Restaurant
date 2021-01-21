@@ -1,23 +1,19 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import {NavigationContainer} from '@react-navigation/native';
+import {Provider} from 'react-redux';
 import React from 'react';
 import RootStackNavigation from './navigations/RootStackNavigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {store} from './store';
 
 const App = () => {
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <RootStackNavigation />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <RootStackNavigation />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 };
 

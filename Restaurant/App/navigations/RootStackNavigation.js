@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 
-import LoginScreen from '../features/authentication/login/LoginScreen';
+import LoginScreen from '../features/authentication/LoginScreen';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
