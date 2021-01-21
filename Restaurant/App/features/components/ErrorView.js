@@ -28,8 +28,6 @@ export default ({errors, onClosePress = () => {}}) => {
 };
 
 const ErrorStringView = ({errors}) => {
-  console.log('Error string view: ');
-  console.log(errors);
   return (
     <View style={styles.errorDetails}>
       <Text style={styles.errorTitle}>{errors}</Text>

@@ -1,19 +1,31 @@
 import 'react-native-gesture-handler';
 
+import HomeScreen from '../features/home/HomeScreen';
 import LoginScreen from '../features/authentication/LoginScreen';
 import React from 'react';
+import SplashScreen from '../features/splash-screen/SplashScreen';
 import {createStackNavigator} from '@react-navigation/stack';
+import {useSelector} from 'react-redux';
 
 const Stack = createStackNavigator();
 
 export default () => {
+  const splashScreen = useSelector((state) => state.splashScreen);
+  const authentication = useSelector((state) => state.authentication);
+
+  if (splashScreen.isLoading) return <SplashScreen />;
+
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        options={{headerShown: false}}
-        name="LoginScreen"
-        component={LoginScreen}
-      />
+      {!authentication.isAuthenticated ? (
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Login"
+          component={LoginScreen}
+        />
+      ) : (
+        <Stack.Screen name="Home" component={HomeScreen} />
+      )}
     </Stack.Navigator>
   );
 };

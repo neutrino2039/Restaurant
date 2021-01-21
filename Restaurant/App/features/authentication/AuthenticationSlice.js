@@ -2,9 +2,10 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {postWithoutAuthorization, thunkHandler} from '../../apis/api';
 
 const initialState = {
-  data: null,
+  token: '',
   status: 'idle',
   errors: null,
+  isAuthenticated: false,
 };
 
 export const login = createAsyncThunk(
@@ -23,26 +24,41 @@ const authenticationSlice = createSlice({
     clearErrors: (state, action) => {
       state.errors = null;
     },
+    setAccessToken: (state, action) => {
+      state.token = action.payload;
+      state.isAuthenticated = action.payload !== null;
+    },
+    logout: (state, action) => {
+      state.token = '';
+      state.isAuthenticated = false;
+    },
   },
   extraReducers: {
     [login.pending]: (state, action) => {
       state.status = 'loading';
-      state.data = null;
+      state.token = '';
       state.errors = null;
+      state.isAuthenticated = false;
     },
     [login.fulfilled]: (state, action) => {
       state.status = 'succeeded';
-      state.data = action.payload;
+      state.token = action.payload.token;
       state.errors = null;
+      state.isAuthenticated = true;
     },
     [login.rejected]: (state, action) => {
       state.status = 'failed';
-      state.data = null;
+      state.token = '';
       state.errors = action.payload;
+      state.isAuthenticated = false;
     },
   },
 });
 
-export const {clearErrors} = authenticationSlice.actions;
+export const {
+  clearErrors,
+  setAccessToken,
+  logout,
+} = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;

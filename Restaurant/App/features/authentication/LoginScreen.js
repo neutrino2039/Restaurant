@@ -21,8 +21,8 @@ const LoginScreen = ({navigation}) => {
   const onLoginButtonPress = async () => {
     try {
       const loginAction = await dispatch(login({userName, password}));
-      unwrapResult(loginAction);
-      await storeAccessToken(authentication.data.token);
+      const result = unwrapResult(loginAction);
+      await storeAccessToken(result.token);
     } catch (error) {}
   };
 

@@ -27,7 +27,6 @@ export const removeFromDevice = async (key) => {
 };
 
 export const storeAccessToken = async (token) => {
-  console.log('access token saved: ' + token);
   return await storeToDevice(ACCESS_TOKEN, token);
 };
 
@@ -39,6 +38,6 @@ export const removeAccessToken = async () => {
   return await removeFromDevice(ACCESS_TOKEN);
 };
 
-export const accessTokenExists = async (token) => {
+export const accessTokenExists = async () => {
   return (await retrieveAccessToken()) !== null;
 };
