@@ -1,12 +1,14 @@
 import {Button, Input, Text} from 'react-native-elements';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {clearErrors, login} from './AuthenticationSlice';
+import {clearErrors, login, setErrors} from './AuthenticationSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import {validatePassword, validateUserName} from '../../validations/user';
 
 import ErrorView from '../components/ErrorView';
 import {storeAccessToken} from '../../utilities/device';
 import {unwrapResult} from '@reduxjs/toolkit';
+import {validateAll} from '../../validations/validation';
 
 const LoginScreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -19,11 +21,21 @@ const LoginScreen = ({navigation}) => {
   const errors = authentication.errors;
 
   const onLoginButtonPress = async () => {
+    if (!validate()) return;
     try {
       const loginAction = await dispatch(login({userName, password}));
       const result = unwrapResult(loginAction);
       await storeAccessToken(result.token);
     } catch (error) {}
+  };
+
+  const validate = () => {
+    const result = validateAll([
+      [validateUserName, userName],
+      [validatePassword, password],
+    ]);
+    dispatch(setErrors(result));
+    return result == null;
   };
 
   return (

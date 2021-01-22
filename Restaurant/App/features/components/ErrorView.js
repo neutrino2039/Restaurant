@@ -35,7 +35,7 @@ const ErrorStringView = ({errors}) => {
   );
 };
 
-const ErrorObjectView = (errors) => {
+const ErrorObjectView = ({errors}) => {
   if (!errors) return null;
   return (
     <View>
@@ -45,7 +45,7 @@ const ErrorObjectView = (errors) => {
 };
 
 const ErrorDetails = (errorTitle, error) => (
-  <View style={styles.errorDetails}>
+  <View style={styles.errorDetails} key={errorTitle}>
     <Text style={styles.errorTitle}>{errorTitle}</Text>
     {error.map((e, index) => {
       return (

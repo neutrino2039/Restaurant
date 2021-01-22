@@ -21,6 +21,9 @@ const authenticationSlice = createSlice({
   name: 'authentication',
   initialState,
   reducers: {
+    setErrors: (state, action) => {
+      state.errors = action.payload;
+    },
     clearErrors: (state, action) => {
       state.errors = null;
     },
@@ -56,6 +59,7 @@ const authenticationSlice = createSlice({
 });
 
 export const {
+  setErrors,
   clearErrors,
   setAccessToken,
   logout,
