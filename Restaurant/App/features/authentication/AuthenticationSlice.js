@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {postWithoutAuthorization, thunkHandler} from '../../apis/api';
+import {postWithoutToken, thunkHandler} from '../../apis/api';
 
 const initialState = {
   token: '',
@@ -12,7 +12,7 @@ export const login = createAsyncThunk(
   'user/login',
   async ({userName, password}, thunkAPI) =>
     thunkHandler(
-      postWithoutAuthorization('User/Login', {userName, password}),
+      postWithoutToken('User/Login', {userName, password}),
       thunkAPI,
     ),
 );
@@ -21,7 +21,7 @@ export const register = createAsyncThunk(
   'user/register',
   async ({userName, password, firstName, lastName}, thunkAPI) =>
     thunkHandler(
-      postWithoutAuthorization('User/Register', {
+      postWithoutToken('User/Register', {
         userName,
         password,
         firstName,

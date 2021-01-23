@@ -5,7 +5,7 @@ const initialState = {
 };
 
 const splashScreenSlice = createSlice({
-  name: 'authentication',
+  name: 'splash-screen',
   initialState,
   reducers: {
     setLoading: (state, action) => {

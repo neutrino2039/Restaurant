@@ -77,15 +77,15 @@ namespace Restaurant.WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.ALL)]
-        [HttpPost("GetById")]
-        public async Task<IActionResult> GetRestaurantByIdAsync(GetRestaurantRequest request)
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetRestaurantByIdAsync([FromQuery]GetRestaurantRequest request)
         {
             return ApiResult(await restaurantService.GetRestaurantByIdAsync(request));
         }
 
         [Authorize(Roles = Roles.ALL)]
-        [HttpPost("GetAll")]
-        public async Task<IActionResult> GetAllRestaurantsAsync(GetAllRestaurantRequest request)
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllRestaurantsAsync([FromQuery]GetAllRestaurantRequest request)
         {
             var showOwnedOnly = User.IsInRole(Roles.OWNER);
             return ApiResult(await restaurantService.GetAllRestaurantsAsync(
@@ -93,8 +93,8 @@ namespace Restaurant.WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.ALL)]
-        [HttpPost("GetDetails")]
-        public async Task<IActionResult> GetDetailsAsync(GetDetailsRequest request)
+        [HttpGet("GetDetails")]
+        public async Task<IActionResult> GetDetailsAsync([FromQuery]GetDetailsRequest request)
         {
             return ApiResult(await restaurantService.GetDetailsAsync(request));
         }

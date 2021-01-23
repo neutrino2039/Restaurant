@@ -1,34 +1,31 @@
 import axios from 'axios';
 import {retrieveAccessToken} from '../utilities/device';
+import {stringify} from 'qs';
 
-// import {stringify} from 'qs';
+export const serverUrl = 'http://10.0.2.2:5000';
 
 const getAuthorizationToken = () => {
   return retrieveAccessToken();
 };
 
-const createUnsecureHeaders = () => {
+const createHeaders = (method) => {
   return {
     Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-};
-
-const createSecureHeaders = async () => {
-  return {
-    ...createUnsecureHeaders(),
-    Authorization: `Bearer ${await getAuthorizationToken()}`,
+    'Content-Type': method === 'get' ? 'application/text' : 'application/json',
   };
 };
 
 const createOptions = (method, url, headers, data) => {
   let result = {
     method,
-    baseURL: 'http://10.0.2.2:5000/api/',
+    baseURL: `${serverUrl}/api/`,
     url,
     headers,
   };
-  return {...result, data};
+  if (method !== 'get') return {...result, data};
+  if (method === 'get' && data)
+    return {...result, url: `${url}?${stringify(data)}`};
+  return result;
 };
 
 const callApiWithHeaders = async (headers, method, url, data) => {
@@ -36,13 +33,16 @@ const callApiWithHeaders = async (headers, method, url, data) => {
   return await axios(options);
 };
 
-const callApiWithoutAuthorization = async (method, url, data) => {
-  const headers = createUnsecureHeaders();
+const callApiWithoutToken = async (method, url, data) => {
+  const headers = createHeaders(method);
   return await callApiWithHeaders(headers, method, url, data);
 };
 
 const callApi = async (method, url, data) => {
-  const headers = await createSecureHeaders();
+  const headers = {
+    ...createHeaders(method),
+    Authorization: `Bearer ${await getAuthorizationToken()}`,
+  };
   return await callApiWithHeaders(headers, method, url, data);
 };
 
@@ -50,8 +50,8 @@ export const get = async (url, data) => {
   return await callApi('get', url, data);
 };
 
-export const postWithoutAuthorization = async (url, data) => {
-  return await callApiWithoutAuthorization('post', url, data);
+export const postWithoutToken = async (url, data) => {
+  return await callApiWithoutToken('post', url, data);
 };
 
 export const post = async (url, data) => {
