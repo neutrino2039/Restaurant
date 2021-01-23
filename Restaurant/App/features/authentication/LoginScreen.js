@@ -10,7 +10,7 @@ import {storeAccessToken} from '../../utilities/device';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
 
-const LoginScreen = ({navigation}) => {
+export default ({navigation}) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
@@ -59,21 +59,20 @@ const LoginScreen = ({navigation}) => {
         <Button
           title="Login"
           icon={{type: 'font-awesome', name: 'sign-in'}}
-          onPress={onLoginButtonPress}
           loading={!canLogin}
+          onPress={onLoginButtonPress}
         />
         <Button
           title="Register"
           icon={{type: 'font-awesome', name: 'user-plus'}}
           containerStyle={styles.registerButton}
           disabled={!canLogin}
+          onPress={() => navigation.navigate('Register')}
         />
       </View>
     </View>
   );
 };
-
-export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {

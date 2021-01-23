@@ -17,6 +17,20 @@ export const login = createAsyncThunk(
     ),
 );
 
+export const register = createAsyncThunk(
+  'user/register',
+  async ({userName, password, firstName, lastName}, thunkAPI) =>
+    thunkHandler(
+      postWithoutAuthorization('User/Register', {
+        userName,
+        password,
+        firstName,
+        lastName,
+      }),
+      thunkAPI,
+    ),
+);
+
 const authenticationSlice = createSlice({
   name: 'authentication',
   initialState,
@@ -50,6 +64,23 @@ const authenticationSlice = createSlice({
       state.isAuthenticated = true;
     },
     [login.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.token = '';
+      state.errors = action.payload;
+      state.isAuthenticated = false;
+    },
+
+    [register.pending]: (state, action) => {
+      state.status = 'loading';
+      state.errors = null;
+    },
+    [register.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.token = action.payload.token;
+      state.errors = null;
+      state.isAuthenticated = true;
+    },
+    [register.rejected]: (state, action) => {
       state.status = 'failed';
       state.token = '';
       state.errors = action.payload;

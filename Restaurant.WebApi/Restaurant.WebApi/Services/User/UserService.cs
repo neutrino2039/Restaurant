@@ -95,9 +95,12 @@ namespace Restaurant.WebApi.Services.User
                     request.FirstName,
                     request.LastName,
                     Roles.REGULAR);
+                var loginResponse = await LoginAsync(new LoginRequest { UserName = request.UserName, Password = request.Password });
                 return new CreateUserResponse
                 {
-                    Message = "User registration was successful."
+                    Message = "User registration was successful.",
+                    Id = loginResponse.Id,
+                    Token = loginResponse.Token
                 };
             }
             catch (Exception e)
