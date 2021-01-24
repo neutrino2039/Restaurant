@@ -7,8 +7,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import ErrorView from '../components/ErrorView';
 import StarRating from './components/StarRating';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {logout} from '../authentication/AuthenticationSlice';
-import {removeAccessToken} from '../../utilities/device';
 import {serverImage} from '../../apis/api';
 
 export default ({navigation}) => {
@@ -23,11 +21,6 @@ export default ({navigation}) => {
 
   const status = restaurants.status;
   const errors = restaurants.errors;
-
-  const onLogoutButtonPress = async () => {
-    await removeAccessToken();
-    await dispatch(logout());
-  };
 
   if (status === 'loading')
     return (
@@ -74,7 +67,6 @@ export default ({navigation}) => {
           </TouchableOpacity>
         )}
       />
-      <Button title="Logout" onPress={onLogoutButtonPress} />
     </View>
   );
 };
