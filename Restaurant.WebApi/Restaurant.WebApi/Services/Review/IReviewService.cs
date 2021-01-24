@@ -7,7 +7,8 @@ namespace Restaurant.WebApi.Services.Review
         Task<CreateReviewResponse> CreateReviewAsync(string userId, CreateReviewRequest request);
         Task<UpdateReviewResponse> UpdateReviewAsync(UpdateReviewRequest request);
         Task<DeleteReviewResponse> DeleteReviewAsync(DeleteReviewRequest request);
-        Task<GetReviewResponse> GetReviewByIdAsync(GetReviewRequest request);
+        Task<GetReviewResponse> GetReviewByIdAsync(GetReviewByIdRequest request);
+        Task<GetReviewResponse> GetReviewByRestaurantIdAsync(string userId, GetReviewByRestaurantIdRequest request);
         Task<GetAllReviewsResponse> GetAllReviewsAsync();
         Task<ReplyToReviewResponse> ReplyToReviewAsync(ReplyToReviewRequest request);
         Task<bool> IsOwnerAuthorizedToReply(string ownerId, int reviewId);

@@ -30,7 +30,7 @@ export default ({navigation}) => {
   const errors = authentication.errors;
 
   const onRegisterButtonPress = async () => {
-    if (!validate()) return;
+    if (!(await validate())) return;
     try {
       const registerAction = await dispatch(
         register({userName, password, firstName, lastName}),
@@ -40,7 +40,7 @@ export default ({navigation}) => {
     } catch (error) {}
   };
 
-  const validate = () => {
+  const validate = async () => {
     const result = validateAll([
       [validateUserName, userName],
       [validatePassword, password],
@@ -48,7 +48,7 @@ export default ({navigation}) => {
       [validateFirstName, firstName],
       [validateLastName, lastName],
     ]);
-    dispatch(setErrors(result));
+    await dispatch(setErrors(result));
     return result == null;
   };
 

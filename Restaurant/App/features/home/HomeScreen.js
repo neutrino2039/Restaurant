@@ -1,6 +1,6 @@
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {Button, Image, Text} from 'react-native-elements';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {clearErrors, getAllRestaurants} from './RestaurantsSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -10,6 +10,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {serverImage} from '../../apis/api';
 
 export default ({navigation}) => {
+  const [refreshing, setRefreshing] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,14 +24,14 @@ export default ({navigation}) => {
   const status = restaurants.status;
   const errors = restaurants.errors;
 
-  if (status === 'loading')
+  if (status === 'loading' && !refreshing)
     return (
       <View style={styles.noDataContainer}>
         <ActivityIndicator size="large" color="darkblue" />
       </View>
     );
 
-  if (!errors && !restaurants.data)
+  if (!refreshing && !errors && !restaurants.data)
     return (
       <View style={styles.noDataContainer}>
         <Text>No data.</Text>
@@ -49,6 +51,12 @@ export default ({navigation}) => {
       <FlatList
         data={restaurants.data}
         keyExtractor={(item) => item.id.toString()}
+        refreshing={refreshing}
+        onRefresh={async () => {
+          setRefreshing(true);
+          await dispatch(getAllRestaurants());
+          setRefreshing(false);
+        }}
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.card}

@@ -21,7 +21,7 @@ export default ({navigation}) => {
   const errors = authentication.errors;
 
   const onLoginButtonPress = async () => {
-    if (!validate()) return;
+    if (!(await validate())) return;
     try {
       const loginAction = await dispatch(login({userName, password}));
       const result = unwrapResult(loginAction);
@@ -29,12 +29,12 @@ export default ({navigation}) => {
     } catch (error) {}
   };
 
-  const validate = () => {
+  const validate = async () => {
     const result = validateAll([
       [validateUserName, userName],
       [validatePassword, password],
     ]);
-    dispatch(setErrors(result));
+    await dispatch(setErrors(result));
     return result == null;
   };
 

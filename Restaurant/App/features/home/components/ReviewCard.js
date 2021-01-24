@@ -1,5 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 
+import Line from './Line';
 import Moment from 'moment';
 import React from 'react';
 import StarRating from './StarRating';
@@ -16,14 +17,14 @@ export default ({title, data, style}) => {
     <View style={[styles.container, style]}>
       <Text style={styles.title}>{title}</Text>
       <StarRating rating={data.stars} />
-      <View style={styles.line} />
+      <Line />
       <View style={styles.comment}>
         <Text style={styles.text}>{data.comment}</Text>
         <Text style={styles.time}>({relativeTime(data.visitDate)})</Text>
       </View>
       {data.reply && (
         <>
-          <View style={styles.line} />
+          <Line />
           <View style={styles.reply}>
             <Text>REPLY</Text>
             <Text style={styles.text}>{data.reply}</Text>
@@ -45,12 +46,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     alignSelf: 'center',
-  },
-  line: {
-    borderColor: 'brown',
-    borderWidth: 1,
-    marginHorizontal: 25,
-    marginVertical: 8,
   },
   comment: {
     flex: 1,

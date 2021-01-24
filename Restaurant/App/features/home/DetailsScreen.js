@@ -5,6 +5,7 @@ import {clearErrors, getRestaurantDetails} from './RestaurantDetailsSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 import ErrorView from '../components/ErrorView';
+import NewReview from './components/NewReview';
 import ReviewCard from './components/ReviewCard';
 import {ScrollView} from 'react-native-gesture-handler';
 import StarRating from './components/StarRating';
@@ -56,7 +57,6 @@ export default ({route, navigation}) => {
   } = restaurantDetails.data;
 
   const restaurant = route.params.restaurant;
-  console.log(restaurant);
 
   return (
     <View style={styles.container}>
@@ -70,6 +70,7 @@ export default ({route, navigation}) => {
           {restaurant.name}
         </Text>
         <StarRating rating={averageRating} />
+
         <ReviewCard
           title="Highest Rated Review"
           data={highestRatedReview}
@@ -85,6 +86,8 @@ export default ({route, navigation}) => {
           data={lastReview}
           style={[styles.reviewCard, styles.lastReviewCard]}
         />
+
+        <NewReview style={styles.newReview} restaurant={restaurant} />
       </ScrollView>
     </View>
   );
@@ -114,5 +117,8 @@ const styles = StyleSheet.create({
   },
   lastReviewCard: {
     marginBottom: 10,
+  },
+  newReview: {
+    margin: 10,
   },
 });

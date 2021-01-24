@@ -17,11 +17,7 @@ export default ({errors, onClosePress = () => {}}) => {
         ) : (
           <ErrorObjectView errors={errors} />
         )}
-        <Button
-          title="Close"
-          containerStyle={styles.button}
-          onPress={onClosePress}
-        />
+        <Button title="Close" onPress={onClosePress} />
       </Card>
     </Overlay>
   );
@@ -51,7 +47,9 @@ const ErrorDetails = (errorTitle, error) => (
       return (
         <View key={index} style={styles.errorTextContainer}>
           <Text style={styles.errorTextBullet}>❍</Text>
-          <Text testID="error">{e}</Text>
+          <Text testID="error" style={styles.errorText}>
+            {e}
+          </Text>
         </View>
       );
     })}
@@ -90,5 +88,7 @@ const styles = StyleSheet.create({
   errorTextBullet: {
     marginRight: 10,
   },
-  button: {},
+  errorText: {
+    marginRight: 23,
+  },
 });

@@ -40,14 +40,21 @@ namespace Restaurant.WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.ALL)]
-        [HttpPost("GetById")]
-        public async Task<IActionResult> GetReviewByIdAsync(GetReviewRequest request)
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetReviewByIdAsync([FromQuery]GetReviewByIdRequest request)
         {
             return ApiResult(await reviewService.GetReviewByIdAsync(request));
         }
 
         [Authorize(Roles = Roles.ALL)]
-        [HttpPost("GetAll")]
+        [HttpGet("GetByRestaurantId")]
+        public async Task<IActionResult> GetReviewByRestaurantIdAsync([FromQuery]GetReviewByRestaurantIdRequest request)
+        {
+            return ApiResult(await reviewService.GetReviewByRestaurantIdAsync(User.Identity!.Name!, request));
+        }
+
+        [Authorize(Roles = Roles.ALL)]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllReviewsAsync()
         {
             return ApiResult(await reviewService.GetAllReviewsAsync());
@@ -66,8 +73,8 @@ namespace Restaurant.WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.OWNER)]
-        [HttpPost("GetReviewsPendingReply")]
-        public async Task<IActionResult> GetReviewsPendingReplyAsync(GetReviewsPendingReplyRequest request)
+        [HttpGet("GetReviewsPendingReply")]
+        public async Task<IActionResult> GetReviewsPendingReplyAsync([FromQuery]GetReviewsPendingReplyRequest request)
         {
             return ApiResult(await reviewService.GetReviewsPendingReplyAsync(request));
         }
