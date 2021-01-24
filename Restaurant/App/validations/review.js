@@ -13,3 +13,13 @@ export const validateComment = (comment) => {
     );
   return {Comment: errors};
 };
+
+export const validateReply = (reply) => {
+  let errors = [];
+  if (!reply) errors.push('Reply should not be empty.');
+  if (reply !== null && (reply.length < 5 || reply.length > 256))
+    errors.push(
+      'Reply should have a minimum length of 5 and maximum length of 256.',
+    );
+  return {Reply: errors};
+};

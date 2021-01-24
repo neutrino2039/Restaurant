@@ -4,7 +4,9 @@ import DetailsScreen from '../features/home/DetailsScreen';
 import HomeScreen from '../features/home/HomeScreen';
 import {Icon} from 'react-native-elements';
 import LoginScreen from '../features/authentication/LoginScreen';
+import PendingReviewsScreen from '../features/pending-reviews/PendingReviewsScreen';
 import ProfileScreen from '../features/profile/ProfileScreen';
+import {ROLES} from '../features/authentication/AuthenticationSlice';
 import React from 'react';
 import RegisterScreen from '../features/authentication/RegisterScreen';
 import SplashScreen from '../features/splash-screen/SplashScreen';
@@ -44,7 +46,11 @@ export default () => {
             component={BottomTabBar}
             options={({route}) => ({headerTitle: getHeaderTitle(route)})}
           />
-          <Stack.Screen name="Details" component={DetailsScreen} />
+          {authentication.role === ROLES.REGULAR ? (
+            <Stack.Screen name="Details" component={DetailsScreen} />
+          ) : (
+            <Stack.Screen name="Details" component={PendingReviewsScreen} />
+          )}
         </>
       )}
     </Stack.Navigator>

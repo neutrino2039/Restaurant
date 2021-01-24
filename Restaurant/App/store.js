@@ -1,6 +1,7 @@
 import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 
 import authenticationReducer from './features/authentication/AuthenticationSlice';
+import pendingReviewsReducer from './features/pending-reviews/PendingReviewsSlice';
 import restaurantDetailsReducer from './features/home/RestaurantDetailsSlice';
 import restaurantsReducer from './features/home/RestaurantsSlice';
 import reviewReducer from './features/home/components/ReviewSlice';
@@ -13,6 +14,7 @@ export const store = configureStore({
     restaurants: restaurantsReducer,
     restaurantDetails: restaurantDetailsReducer,
     review: reviewReducer,
+    pendingReviews: pendingReviewsReducer,
   },
   middleware: [...getDefaultMiddleware()],
 });

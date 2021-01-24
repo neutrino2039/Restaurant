@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Moment from 'moment';
 
 export const ACCESS_TOKEN = 'accessToken';
 export const REFRESH_TOKEN = 'refreshToken';
@@ -40,4 +41,8 @@ export const removeAccessToken = async () => {
 
 export const accessTokenExists = async () => {
   return (await retrieveAccessToken()) !== null;
+};
+
+export const relativeTime = (dateTime) => {
+  return Moment.utc(dateTime).fromNow();
 };

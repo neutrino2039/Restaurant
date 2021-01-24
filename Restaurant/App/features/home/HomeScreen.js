@@ -26,7 +26,6 @@ export default ({navigation}) => {
   const role = authentication.role;
 
   const getData = useCallback(async () => {
-    console.log('getData called...');
     return await dispatch(getAllRestaurants());
   }, [dispatch]);
 

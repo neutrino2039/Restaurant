@@ -27,7 +27,7 @@ export const getReviewByRestaurantId = createAsyncThunk(
 );
 
 const reviewSlice = createSlice({
-  name: 'restaurants',
+  name: 'review',
   initialState,
   reducers: {
     setErrors: (state, action) => {

@@ -1,14 +1,10 @@
 import {StyleSheet, View} from 'react-native';
 
 import Line from './Line';
-import Moment from 'moment';
 import React from 'react';
 import StarRating from './StarRating';
 import {Text} from 'react-native-elements';
-
-const relativeTime = (dateTime) => {
-  return Moment.utc(dateTime).fromNow();
-};
+import {relativeTime} from '../../../utilities/device';
 
 export default ({title, data, style}) => {
   if (!data) return null;
