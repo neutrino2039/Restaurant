@@ -48,6 +48,16 @@ export const createRestaurant = createAsyncThunk(
   },
 );
 
+export const updateRestaurant = createAsyncThunk(
+  'restaurant/update',
+  async ({id, name, address, imageName}, thunkAPI) => {
+    return thunkHandler(
+      post('Restaurant/Update', {id, name, address, imageName}),
+      thunkAPI,
+    );
+  },
+);
+
 const restaurantsSlice = createSlice({
   name: 'restaurants',
   initialState,
@@ -67,6 +77,9 @@ const restaurantsSlice = createSlice({
       state.filter = false;
       state.starsFrom = 0;
       state.starsTo = 0;
+    },
+    setImageName: (state, action) => {
+      state.imageName = action.payload;
     },
   },
   extraReducers: {
@@ -117,6 +130,21 @@ const restaurantsSlice = createSlice({
       state.data = null;
       state.errors = action.payload;
     },
+
+    [updateRestaurant.pending]: (state, action) => {
+      state.status = 'loading';
+      state.data = null;
+      state.errors = null;
+    },
+    [updateRestaurant.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.errors = null;
+    },
+    [updateRestaurant.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.data = null;
+      state.errors = action.payload;
+    },
   },
 });
 
@@ -125,6 +153,7 @@ export const {
   clearErrors,
   setFilter,
   clearFilter,
+  setImageName,
 } = restaurantsSlice.actions;
 
 export default restaurantsSlice.reducer;

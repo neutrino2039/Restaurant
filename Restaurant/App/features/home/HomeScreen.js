@@ -102,7 +102,12 @@ export default ({navigation}) => {
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('Details', {restaurant: item})}>
+            onPress={() =>
+              navigation.navigate(
+                role === ROLES.ADMIN ? 'UpdateRestaurant' : 'Details',
+                {restaurant: item},
+              )
+            }>
             <View style={styles.restaurantDetails}>
               <Image
                 source={{uri: serverImage(item.imageName)}}

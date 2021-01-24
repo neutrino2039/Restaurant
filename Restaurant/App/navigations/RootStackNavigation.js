@@ -11,6 +11,7 @@ import {ROLES} from '../features/authentication/AuthenticationSlice';
 import React from 'react';
 import RegisterScreen from '../features/authentication/RegisterScreen';
 import SplashScreen from '../features/splash-screen/SplashScreen';
+import UpdateRestaurantScreen from '../features/home/UpdateRestaurantScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
@@ -59,6 +60,11 @@ export default () => {
                 component={CreateRestaurantScreen}
                 options={({route}) => ({headerTitle: getHeaderTitle(route)})}
               />
+              <Stack.Screen
+                name="UpdateRestaurant"
+                component={UpdateRestaurantScreen}
+                options={({route}) => ({headerTitle: getHeaderTitle(route)})}
+              />
             </>
           )}
         </>
@@ -100,5 +106,6 @@ function getHeaderTitleForTabBar(route) {
 
 function getHeaderTitle(route) {
   if (route.name === 'CreateRestaurant') return 'Create Restaurant';
+  if (route.name === 'UpdateRestaurant') return 'Update Restaurant';
   return route.name;
 }
