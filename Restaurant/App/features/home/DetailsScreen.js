@@ -49,12 +49,7 @@ export default ({route, navigation}) => {
       </View>
     );
 
-  const {
-    averageRating,
-    highestRatedReview,
-    lastReview,
-    lowestRatedReview,
-  } = restaurantDetails.data;
+  const {averageRating} = restaurantDetails.data;
 
   const restaurant = route.params.restaurant;
 
@@ -62,34 +57,50 @@ export default ({route, navigation}) => {
     <View style={styles.container}>
       <ErrorView errors={errors} onClosePress={() => dispatch(clearErrors())} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Image
-          source={{uri: serverImage(restaurant.imageName)}}
-          style={styles.image}
+        <RestaurantHeader
+          restaurant={restaurant}
+          averageRating={averageRating}
         />
-        <Text h3 style={styles.name}>
-          {restaurant.name}
-        </Text>
-        <StarRating rating={averageRating} />
-
-        <ReviewCard
-          title="Highest Rated Review"
-          data={highestRatedReview}
-          style={styles.reviewCard}
-        />
-        <ReviewCard
-          title="Lowest Rated Review"
-          data={lowestRatedReview}
-          style={styles.reviewCard}
-        />
-        <ReviewCard
-          title="Last Review"
-          data={lastReview}
-          style={[styles.reviewCard, styles.lastReviewCard]}
-        />
-
+        <ReviewCards reviews={restaurantDetails.data} />
         <NewReview style={styles.newReview} restaurant={restaurant} />
       </ScrollView>
     </View>
+  );
+};
+
+const RestaurantHeader = ({restaurant, averageRating}) => (
+  <>
+    <Image
+      source={{uri: serverImage(restaurant.imageName)}}
+      style={styles.image}
+    />
+    <Text h3 style={styles.name}>
+      {restaurant.name}
+    </Text>
+    <StarRating rating={averageRating} />
+  </>
+);
+
+const ReviewCards = ({reviews}) => {
+  const {highestRatedReview, lastReview, lowestRatedReview} = reviews;
+  return (
+    <>
+      <ReviewCard
+        title="Highest Rated Review"
+        data={highestRatedReview}
+        style={styles.reviewCard}
+      />
+      <ReviewCard
+        title="Lowest Rated Review"
+        data={lowestRatedReview}
+        style={styles.reviewCard}
+      />
+      <ReviewCard
+        title="Last Review"
+        data={lastReview}
+        style={[styles.reviewCard, styles.lastReviewCard]}
+      />
+    </>
   );
 };
 
