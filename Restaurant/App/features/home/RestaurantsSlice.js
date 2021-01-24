@@ -58,6 +58,13 @@ export const updateRestaurant = createAsyncThunk(
   },
 );
 
+export const deleteRestaurant = createAsyncThunk(
+  'restaurant/delete',
+  async ({id}, thunkAPI) => {
+    return thunkHandler(post('Restaurant/Delete', {id}), thunkAPI);
+  },
+);
+
 const restaurantsSlice = createSlice({
   name: 'restaurants',
   initialState,
@@ -101,7 +108,7 @@ const restaurantsSlice = createSlice({
     },
 
     [uploadImage.pending]: (state, action) => {
-      state.status = 'loading';
+      state.status = 'uploading';
       state.data = null;
       state.errors = null;
     },
@@ -117,7 +124,7 @@ const restaurantsSlice = createSlice({
     },
 
     [createRestaurant.pending]: (state, action) => {
-      state.status = 'loading';
+      state.status = 'creating';
       state.data = null;
       state.errors = null;
     },
@@ -132,7 +139,7 @@ const restaurantsSlice = createSlice({
     },
 
     [updateRestaurant.pending]: (state, action) => {
-      state.status = 'loading';
+      state.status = 'updating';
       state.data = null;
       state.errors = null;
     },
@@ -141,6 +148,21 @@ const restaurantsSlice = createSlice({
       state.errors = null;
     },
     [updateRestaurant.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.data = null;
+      state.errors = action.payload;
+    },
+
+    [deleteRestaurant.pending]: (state, action) => {
+      state.status = 'deleting';
+      state.data = null;
+      state.errors = null;
+    },
+    [deleteRestaurant.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.errors = null;
+    },
+    [deleteRestaurant.rejected]: (state, action) => {
       state.status = 'failed';
       state.data = null;
       state.errors = action.payload;

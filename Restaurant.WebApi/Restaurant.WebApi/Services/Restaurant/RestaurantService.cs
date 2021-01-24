@@ -90,7 +90,11 @@ namespace Restaurant.WebApi.Services.Restaurant
             {
                 Message = "Restaurant delete succssful."
             };
-            var restaurant = await db.Restaurants.FindAsync(request.Id);
+            var restaurant = await Task.Run(() => 
+                db.Restaurants
+                    .Where(r => r.Id == request.Id)
+                    .Include(r => r.Reviews)
+                    .FirstOrDefault());
             if (restaurant is null)
                 return userDeletedResponse;
 

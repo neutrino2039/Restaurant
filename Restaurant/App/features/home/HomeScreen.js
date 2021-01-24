@@ -104,7 +104,7 @@ export default ({navigation}) => {
             style={styles.card}
             onPress={() =>
               navigation.navigate(
-                role === ROLES.ADMIN ? 'UpdateRestaurant' : 'Details',
+                role === ROLES.ADMIN ? 'UpdateDeleteRestaurant' : 'Details',
                 {restaurant: item},
               )
             }>

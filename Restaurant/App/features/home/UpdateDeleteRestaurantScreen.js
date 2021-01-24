@@ -3,6 +3,7 @@ import {Image, StyleSheet, ToastAndroid, View} from 'react-native';
 import React, {useState} from 'react';
 import {
   clearErrors,
+  deleteRestaurant,
   getAllRestaurants,
   setErrors,
   setImageName,
@@ -44,7 +45,7 @@ export default ({route, navigation}) => {
   const loading = status === 'loading';
   const errors = restaurants.errors;
 
-  const onSaveButtonPress = async () => {
+  const onUpdateButtonPress = async () => {
     if (!(await validate())) return;
     try {
       await dispatch(
@@ -57,6 +58,15 @@ export default ({route, navigation}) => {
       );
       await dispatch(getAllRestaurants());
       ToastAndroid.show('Restaurant saved', ToastAndroid.LONG);
+      navigation.goBack();
+    } catch (error) {}
+  };
+
+  const onDeleteButtonPress = async () => {
+    try {
+      await dispatch(deleteRestaurant({id: restaurant.id}));
+      await dispatch(getAllRestaurants());
+      ToastAndroid.show('Restaurant deleted', ToastAndroid.LONG);
       navigation.goBack();
     } catch (error) {}
   };
@@ -115,15 +125,23 @@ export default ({route, navigation}) => {
                 } catch {}
               })
             }
-            loading={!restaurants.imageName && loading}
+            loading={restaurants.status === 'uploading'}
           />
 
           <Button
-            title="Save"
+            title="Update"
             icon={{type: 'font-awesome', name: 'user-plus'}}
-            containerStyle={styles.button}
-            loading={restaurants.imageName && loading}
-            onPress={onSaveButtonPress}
+            buttonStyle={styles.button}
+            loading={restaurants.status === 'updating'}
+            onPress={onUpdateButtonPress}
+          />
+
+          <Button
+            title="Delete"
+            icon={{type: 'font-awesome', name: 'trash'}}
+            buttonStyle={[styles.button, styles.deleteButton]}
+            loading={restaurants.status === 'deleting'}
+            onPress={onDeleteButtonPress}
           />
         </View>
       </ScrollView>
@@ -143,5 +161,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+  },
+  deleteButton: {
+    backgroundColor: '#d00',
   },
 });

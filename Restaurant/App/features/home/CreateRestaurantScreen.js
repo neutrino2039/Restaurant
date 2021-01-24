@@ -92,14 +92,14 @@ export default ({navigation}) => {
                 );
               })
             }
-            loading={!restaurants.imageName && loading}
+            loading={restaurants.status === 'uploading'}
           />
 
           <Button
             title="Save"
             icon={{type: 'font-awesome', name: 'user-plus'}}
             containerStyle={styles.button}
-            loading={restaurants.imageName && loading}
+            loading={restaurants.status === 'creating'}
             onPress={onSaveButtonPress}
           />
         </View>
