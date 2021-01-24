@@ -81,7 +81,8 @@ namespace Restaurant.WebApi.Services.User
             {
                 Message = "Logged in successfully.",
                 Id = user.Id,
-                Token = tokenService.GenerateToken(role, user)
+                Token = tokenService.GenerateToken(role, user),
+                Role = role
             };
         }
 
@@ -100,7 +101,8 @@ namespace Restaurant.WebApi.Services.User
                 {
                     Message = "User registration was successful.",
                     Id = loginResponse.Id,
-                    Token = loginResponse.Token
+                    Token = loginResponse.Token,
+                    Role = loginResponse.Role
                 };
             }
             catch (Exception e)

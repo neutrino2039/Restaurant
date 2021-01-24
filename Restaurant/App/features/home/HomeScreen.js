@@ -1,6 +1,6 @@
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {Button, Image, Text} from 'react-native-elements';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   clearErrors,
   clearFilter,
@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import ErrorView from '../components/ErrorView';
 import FilterView from './components/FilterView';
+import {ROLES} from '../authentication/AuthenticationSlice';
 import StarRating from './components/StarRating';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {serverImage} from '../../apis/api';
@@ -21,11 +22,17 @@ export default ({navigation}) => {
   const [starsTo, setStarsTo] = useState(0);
 
   const dispatch = useDispatch();
+  const authentication = useSelector((state) => state.authentication);
+  const role = authentication.role;
+
+  const getData = useCallback(async () => {
+    console.log('getData called...');
+    return await dispatch(getAllRestaurants());
+  }, [dispatch]);
 
   useEffect(() => {
-    const getData = async () => await dispatch(getAllRestaurants());
     getData();
-  }, [dispatch]);
+  }, [getData]);
 
   const restaurants = useSelector((state) => state.restaurants);
 
@@ -47,7 +54,7 @@ export default ({navigation}) => {
           title="Retry"
           type="clear"
           icon={{type: 'font-awesome', name: 'undo', style: [{scaleX: -1}]}}
-          onPress={async () => await dispatch(getAllRestaurants())}>
+          onPress={async () => await getData()}>
           Retry
         </Button>
       </View>
@@ -67,11 +74,11 @@ export default ({navigation}) => {
           setFilterFrom(0);
           setStarsTo(0);
           await dispatch(clearFilter());
-          await dispatch(getAllRestaurants());
+          await getData();
         }}
         onFilterPress={async () => {
           await dispatch(setFilter({starsFrom, starsTo}));
-          await dispatch(getAllRestaurants());
+          await getData();
         }}
       />
 
@@ -81,7 +88,7 @@ export default ({navigation}) => {
         refreshing={refreshing}
         onRefresh={async () => {
           setRefreshing(true);
-          await dispatch(getAllRestaurants());
+          await getData();
           setRefreshing(false);
         }}
         renderItem={({item}) => (
@@ -98,7 +105,16 @@ export default ({navigation}) => {
                 <Text>{item.address}</Text>
               </View>
             </View>
-            <StarRating rating={item.averageStars} />
+            <View>
+              <StarRating rating={item.averageStars} />
+              {role === ROLES.OWNER && (
+                <>
+                  <Text style={styles.pendingReplies}>
+                    {`${item.pendingReplies} replie(s) pending`}
+                  </Text>
+                </>
+              )}
+            </View>
           </TouchableOpacity>
         )}
       />
@@ -156,5 +172,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: 'brown',
+  },
+  pendingReplies: {
+    alignSelf: 'flex-end',
   },
 });

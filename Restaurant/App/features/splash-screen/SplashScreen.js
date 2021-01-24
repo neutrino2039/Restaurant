@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {retrieveAccessToken, retrieveFromDevice} from '../../utilities/device';
 
 import {Text} from 'react-native-elements';
-import {retrieveAccessToken} from '../../utilities/device';
 import {setAccessToken} from '../authentication/AuthenticationSlice';
 import {setLoading} from '../splash-screen/SplashScreenSlice';
 import {useDispatch} from 'react-redux';
@@ -10,12 +10,14 @@ import {useDispatch} from 'react-redux';
 export default ({navigation}) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const getAccessToken = async () => {
-      var token = await retrieveAccessToken();
-      await dispatch(setAccessToken(token));
+    const retrieveSavedData = async () => {
+      const role = await retrieveFromDevice('role');
+      const token = await retrieveAccessToken();
+      await dispatch(setAccessToken({role, token}));
       await dispatch(setLoading(false));
     };
-    getAccessToken();
+
+    retrieveSavedData();
   }, [dispatch]);
 
   return (

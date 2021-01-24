@@ -1,8 +1,11 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {postWithoutToken, thunkHandler} from '../../apis/api';
 
+export const ROLES = {ADMIN: 'Admin', OWNER: 'Owner', REGULAR: 'Regular'};
+
 const initialState = {
   token: '',
+  role: '',
   status: 'idle',
   errors: null,
   isAuthenticated: false,
@@ -42,7 +45,8 @@ const authenticationSlice = createSlice({
       state.errors = null;
     },
     setAccessToken: (state, action) => {
-      state.token = action.payload;
+      state.role = action.payload.role;
+      state.token = action.payload.token;
       state.isAuthenticated = action.payload !== null;
     },
     logout: (state, action) => {
@@ -54,18 +58,21 @@ const authenticationSlice = createSlice({
     [login.pending]: (state, action) => {
       state.status = 'loading';
       state.token = '';
+      state.role = '';
       state.errors = null;
       state.isAuthenticated = false;
     },
     [login.fulfilled]: (state, action) => {
       state.status = 'succeeded';
       state.token = action.payload.token;
+      state.role = action.payload.role;
       state.errors = null;
       state.isAuthenticated = true;
     },
     [login.rejected]: (state, action) => {
       state.status = 'failed';
       state.token = '';
+      state.role = '';
       state.errors = action.payload;
       state.isAuthenticated = false;
     },
@@ -77,12 +84,14 @@ const authenticationSlice = createSlice({
     [register.fulfilled]: (state, action) => {
       state.status = 'succeeded';
       state.token = action.payload.token;
+      state.role = action.payload.role;
       state.errors = null;
       state.isAuthenticated = true;
     },
     [register.rejected]: (state, action) => {
       state.status = 'failed';
       state.token = '';
+      state.role = '';
       state.errors = action.payload;
       state.isAuthenticated = false;
     },

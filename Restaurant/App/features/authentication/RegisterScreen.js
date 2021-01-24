@@ -2,6 +2,7 @@ import {Button, Input, Text} from 'react-native-elements';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {clearErrors, register, setErrors} from './AuthenticationSlice';
+import {storeAccessToken, storeToDevice} from '../../utilities/device';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   validateConfirmPassword,
@@ -12,7 +13,6 @@ import {
 } from '../../validations/user';
 
 import ErrorView from '../components/ErrorView';
-import {storeAccessToken} from '../../utilities/device';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
 
@@ -37,6 +37,7 @@ export default ({navigation}) => {
       );
       const result = unwrapResult(registerAction);
       await storeAccessToken(result.token);
+      await storeToDevice('role', result.role);
     } catch (error) {}
   };
 

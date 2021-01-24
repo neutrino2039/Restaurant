@@ -2,11 +2,11 @@ import {Button, Input, Text} from 'react-native-elements';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {clearErrors, login, setErrors} from './AuthenticationSlice';
+import {storeAccessToken, storeToDevice} from '../../utilities/device';
 import {useDispatch, useSelector} from 'react-redux';
 import {validatePassword, validateUserName} from '../../validations/user';
 
 import ErrorView from '../components/ErrorView';
-import {storeAccessToken} from '../../utilities/device';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
 
@@ -26,6 +26,7 @@ export default ({navigation}) => {
       const loginAction = await dispatch(login({userName, password}));
       const result = unwrapResult(loginAction);
       await storeAccessToken(result.token);
+      await storeToDevice('role', result.role);
     } catch (error) {}
   };
 
