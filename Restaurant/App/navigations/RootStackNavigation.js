@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 
+import CreateRestaurantScreen from '../features/home/CreateRestaurantScreen';
 import DetailsScreen from '../features/home/DetailsScreen';
 import HomeScreen from '../features/home/HomeScreen';
 import {Icon} from 'react-native-elements';
@@ -44,12 +45,21 @@ export default () => {
           <Stack.Screen
             name="Home"
             component={BottomTabBar}
-            options={({route}) => ({headerTitle: getHeaderTitle(route)})}
+            options={({route}) => ({
+              headerTitle: getHeaderTitleForTabBar(route),
+            })}
           />
           {authentication.role === ROLES.REGULAR ? (
             <Stack.Screen name="Details" component={DetailsScreen} />
           ) : (
-            <Stack.Screen name="Details" component={PendingReviewsScreen} />
+            <>
+              <Stack.Screen name="Details" component={PendingReviewsScreen} />
+              <Stack.Screen
+                name="CreateRestaurant"
+                component={CreateRestaurantScreen}
+                options={({route}) => ({headerTitle: getHeaderTitle(route)})}
+              />
+            </>
           )}
         </>
       )}
@@ -82,6 +92,13 @@ const BottomTabBar = () => (
   </Tab.Navigator>
 );
 
+function getHeaderTitleForTabBar(route) {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  if (routeName === 'NewRestaurant') return 'New Restaurant';
+  return routeName;
+}
+
 function getHeaderTitle(route) {
-  return getFocusedRouteNameFromRoute(route) ?? 'Home';
+  if (route.name === 'CreateRestaurant') return 'Create Restaurant';
+  return route.name;
 }

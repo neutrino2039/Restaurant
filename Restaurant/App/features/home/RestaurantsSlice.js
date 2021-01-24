@@ -1,11 +1,12 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {get, thunkHandler} from '../../apis/api';
+import {get, post, postImage, thunkHandler} from '../../apis/api';
 
 const initialState = {
   filter: false,
   starsFrom: 0,
   starsTo: 0,
   data: null,
+  imageName: null,
   status: 'idle',
   errors: null,
 };
@@ -22,6 +23,26 @@ export const getAllRestaurants = createAsyncThunk(
         starsFrom: restaurants.starsFrom,
         starsTo: restaurants.starsTo,
       }),
+      thunkAPI,
+    );
+  },
+);
+
+export const uploadImage = createAsyncThunk(
+  'restaurant/uploadImage',
+  async (imageData, thunkAPI) => {
+    return thunkHandler(
+      postImage('Restaurant/UploadImage', imageData),
+      thunkAPI,
+    );
+  },
+);
+
+export const createRestaurant = createAsyncThunk(
+  'restaurant/create',
+  async ({name, address, imageName}, thunkAPI) => {
+    return thunkHandler(
+      post('Restaurant/Create', {name, address, imageName}),
       thunkAPI,
     );
   },
@@ -57,9 +78,41 @@ const restaurantsSlice = createSlice({
     [getAllRestaurants.fulfilled]: (state, action) => {
       state.status = 'succeeded';
       state.data = action.payload.restaurants;
+      state.imageName = null;
       state.errors = null;
     },
     [getAllRestaurants.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.data = null;
+      state.errors = action.payload;
+    },
+
+    [uploadImage.pending]: (state, action) => {
+      state.status = 'loading';
+      state.data = null;
+      state.errors = null;
+    },
+    [uploadImage.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.imageName = action.payload.fileName;
+      state.errors = null;
+    },
+    [uploadImage.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.data = null;
+      state.errors = action.payload;
+    },
+
+    [createRestaurant.pending]: (state, action) => {
+      state.status = 'loading';
+      state.data = null;
+      state.errors = null;
+    },
+    [createRestaurant.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.errors = null;
+    },
+    [createRestaurant.rejected]: (state, action) => {
       state.status = 'failed';
       state.data = null;
       state.errors = action.payload;

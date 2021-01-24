@@ -58,6 +58,19 @@ export const post = async (url, data) => {
   return await callApi('post', url, data);
 };
 
+export const postImage = async (url, data) => {
+  const method = 'post';
+  const headers = {
+    ...createHeaders(method),
+    'Content-Type': 'multipart/form-data',
+    Authorization: `Bearer ${await getAuthorizationToken()}`,
+  };
+  const formData = new FormData();
+  formData.append('image', data);
+  const options = createOptions(method, url, headers, formData);
+  return await axios(options);
+};
+
 export const thunkHandler = async (asyncFunction, thunkAPI) => {
   try {
     const response = await asyncFunction;

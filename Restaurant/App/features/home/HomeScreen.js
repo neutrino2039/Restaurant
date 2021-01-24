@@ -81,6 +81,15 @@ export default ({navigation}) => {
         }}
       />
 
+      {role === ROLES.OWNER && (
+        <Button
+          title="Create Restaurant"
+          icon={{type: 'font-awesome', name: 'plus'}}
+          containerStyle={styles.createRestaurantButton}
+          onPress={() => navigation.navigate('CreateRestaurant')}
+        />
+      )}
+
       <FlatList
         data={restaurants.data}
         keyExtractor={(item) => item.id.toString()}
@@ -134,6 +143,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   filterView: {
+    margin: 10,
+  },
+  createRestaurantButton: {
     margin: 10,
   },
   card: {

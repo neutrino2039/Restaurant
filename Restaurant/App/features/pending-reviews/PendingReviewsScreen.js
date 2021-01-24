@@ -26,7 +26,6 @@ export default ({route, navigation}) => {
   const dispatch = useDispatch();
 
   const getData = useCallback(async () => {
-    console.log(route.params.restaurant.id);
     await dispatch(getReviewsPendingReply(route.params.restaurant.id));
   }, [dispatch, route]);
 
@@ -39,10 +38,7 @@ export default ({route, navigation}) => {
   const loading = status === 'loading';
   const errors = pendingReviews.errors;
 
-  console.log(pendingReviews);
-
   const onSubmitButtonPress = async (review) => {
-    console.log(review);
     if (!(await validate())) return;
     try {
       const replyToReviewAction = await dispatch(
@@ -57,7 +53,6 @@ export default ({route, navigation}) => {
 
   const validate = async () => {
     const result = validateAll([[validateReply, reply]]);
-    console.log(result);
     await dispatch(setErrors(result));
     return result == null;
   };
