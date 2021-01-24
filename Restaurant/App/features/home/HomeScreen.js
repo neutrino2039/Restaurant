@@ -1,16 +1,24 @@
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {Button, Image, Text} from 'react-native-elements';
 import React, {useEffect, useState} from 'react';
-import {clearErrors, getAllRestaurants} from './RestaurantsSlice';
+import {
+  clearErrors,
+  clearFilter,
+  getAllRestaurants,
+  setFilter,
+} from './RestaurantsSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 import ErrorView from '../components/ErrorView';
+import FilterView from './components/FilterView';
 import StarRating from './components/StarRating';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {serverImage} from '../../apis/api';
 
 export default ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
+  const [starsFrom, setFilterFrom] = useState(0);
+  const [starsTo, setStarsTo] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -48,6 +56,25 @@ export default ({navigation}) => {
   return (
     <View style={styles.container}>
       <ErrorView errors={errors} onClosePress={() => dispatch(clearErrors())} />
+
+      <FilterView
+        style={styles.filterView}
+        from={starsFrom}
+        to={starsTo}
+        onFromChange={(stars) => setFilterFrom(stars)}
+        onToChange={(stars) => setStarsTo(stars)}
+        onClearPress={async () => {
+          setFilterFrom(0);
+          setStarsTo(0);
+          await dispatch(clearFilter());
+          await dispatch(getAllRestaurants());
+        }}
+        onFilterPress={async () => {
+          await dispatch(setFilter({starsFrom, starsTo}));
+          await dispatch(getAllRestaurants());
+        }}
+      />
+
       <FlatList
         data={restaurants.data}
         keyExtractor={(item) => item.id.toString()}
@@ -90,6 +117,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 0,
     paddingTop: 5,
+  },
+  filterView: {
+    margin: 10,
   },
   card: {
     flex: 1,

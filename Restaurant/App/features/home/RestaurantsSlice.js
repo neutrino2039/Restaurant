@@ -2,6 +2,9 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {get, thunkHandler} from '../../apis/api';
 
 const initialState = {
+  filter: false,
+  starsFrom: 0,
+  starsTo: 0,
   data: null,
   status: 'idle',
   errors: null,
@@ -9,15 +12,19 @@ const initialState = {
 
 export const getAllRestaurants = createAsyncThunk(
   'restaurant/getAll',
-  async (thunkAPI) =>
-    thunkHandler(
+  async (_, thunkAPI) => {
+    const restaurants = thunkAPI.getState().restaurants;
+    return thunkHandler(
       get('Restaurant/GetAll', {
         sort: true,
         sortDirection: 'Desc',
-        filter: false,
+        filter: restaurants.filter,
+        starsFrom: restaurants.starsFrom,
+        starsTo: restaurants.starsTo,
       }),
       thunkAPI,
-    ),
+    );
+  },
 );
 
 const restaurantsSlice = createSlice({
@@ -29,6 +36,16 @@ const restaurantsSlice = createSlice({
     },
     clearErrors: (state, action) => {
       state.errors = null;
+    },
+    setFilter: (state, action) => {
+      state.filter = true;
+      state.starsFrom = action.payload.starsFrom;
+      state.starsTo = action.payload.starsTo;
+    },
+    clearFilter: (state, action) => {
+      state.filter = false;
+      state.starsFrom = 0;
+      state.starsTo = 0;
     },
   },
   extraReducers: {
@@ -50,6 +67,11 @@ const restaurantsSlice = createSlice({
   },
 });
 
-export const {setErrors, clearErrors} = restaurantsSlice.actions;
+export const {
+  setErrors,
+  clearErrors,
+  setFilter,
+  clearFilter,
+} = restaurantsSlice.actions;
 
 export default restaurantsSlice.reducer;
