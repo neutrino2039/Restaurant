@@ -5,11 +5,11 @@ import {clearErrors, getAllRestaurants} from './RestaurantsSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 import ErrorView from '../components/ErrorView';
-import StarRating from 'react-native-star-rating';
+import StarRating from './components/StarRating';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {logout} from '../authentication/AuthenticationSlice';
 import {removeAccessToken} from '../../utilities/device';
-import {serverUrl} from '../../apis/api';
+import {serverImage} from '../../apis/api';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -36,14 +36,15 @@ export default ({navigation}) => {
       </View>
     );
 
-  if (!restaurants.data)
+  if (!errors && !restaurants.data)
     return (
       <View style={styles.noDataContainer}>
         <Text>No data.</Text>
         <Button
           title="Retry"
           type="clear"
-          icon={{type: 'font-awesome', name: 'undo', style: [{scaleX: -1}]}}>
+          icon={{type: 'font-awesome', name: 'undo', style: [{scaleX: -1}]}}
+          onPress={async () => await dispatch(getAllRestaurants())}>
           Retry
         </Button>
       </View>
@@ -54,13 +55,14 @@ export default ({navigation}) => {
       <ErrorView errors={errors} onClosePress={() => dispatch(clearErrors())} />
       <FlatList
         data={restaurants.data}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => console.log('got to details')}>
+            onPress={() => navigation.navigate('Details', {restaurant: item})}>
             <View style={styles.restaurantDetails}>
               <Image
-                source={{uri: `${serverUrl}/Images/${item.imageName}`}}
+                source={{uri: serverImage(item.imageName)}}
                 style={styles.image}
               />
               <View>
@@ -68,17 +70,7 @@ export default ({navigation}) => {
                 <Text>{item.address}</Text>
               </View>
             </View>
-            <View style={styles.starContainer}>
-              <StarRating
-                starSize={25}
-                rating={item.averageStars}
-                starStyle={styles.star}
-                disabled={true}
-              />
-              <Text style={styles.ratingText}>
-                {item.averageStars.toFixed(1)}
-              </Text>
-            </View>
+            <StarRating rating={item.averageStars} />
           </TouchableOpacity>
         )}
       />
@@ -128,9 +120,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-  },
-  star: {
-    color: 'brown',
   },
   ratingText: {
     marginLeft: 5,

@@ -2,7 +2,7 @@ import axios from 'axios';
 import {retrieveAccessToken} from '../utilities/device';
 import {stringify} from 'qs';
 
-export const serverUrl = 'http://10.0.2.2:5000';
+const serverUrl = 'http://10.0.2.2:5000';
 
 const getAuthorizationToken = () => {
   return retrieveAccessToken();
@@ -67,4 +67,8 @@ export const thunkHandler = async (asyncFunction, thunkAPI) => {
       error?.response?.data?.errors || error?.message || 'Unexpected Error.',
     );
   }
+};
+
+export const serverImage = (imageName) => {
+  return `${serverUrl}/Images/${imageName}`;
 };

@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 
+import DetailsScreen from '../features/home/DetailsScreen';
 import HomeScreen from '../features/home/HomeScreen';
 import LoginScreen from '../features/authentication/LoginScreen';
 import React from 'react';
@@ -32,7 +33,10 @@ export default () => {
           />
         </>
       ) : (
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Details" component={DetailsScreen} />
+        </>
       )}
     </Stack.Navigator>
   );

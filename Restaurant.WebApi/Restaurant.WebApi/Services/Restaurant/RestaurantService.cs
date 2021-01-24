@@ -191,14 +191,20 @@ namespace Restaurant.WebApi.Services.Restaurant
         public async Task<GetDetailsResponse> GetDetailsAsync(GetDetailsRequest request)
         {
             var restaurantId = request.Id;
+
+            if (await db.Restaurants.FindAsync(request.Id) is null)
+                return new GetDetailsResponse
+                {
+                    Errors = CreateError("GetDetails", "Restaurant not found")
+                };
+
             var details = new GetDetailsResponse();
 
-            var restaurant = db.Restaurants
-                .Where(r => r.Id == restaurantId)
-                .Include(r => r.Reviews);
+            if (!await Task.Run(() => db.Reviews.Any(r => r.RestaurantId == restaurantId)))
+                return details;
 
             details.AverageRating = await Task.Run(() =>
-                restaurant.Select(r => r.Reviews.Average(r => r.Stars)).FirstOrDefault());
+                db.Reviews.Where(r => r.RestaurantId == restaurantId).Average(r => r.Stars));
 
             var maxStars = await Task.Run(() => 
                 db.Reviews.Where(r => r.RestaurantId == restaurantId).Max(r => r.Stars));
