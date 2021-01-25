@@ -48,8 +48,8 @@ export default ({restaurant, style}) => {
       unwrapResult(createReviewAction);
       ToastAndroid.show('Review submitted.', ToastAndroid.LONG);
 
-      await dispatch(getAllRestaurants());
-      await dispatch(getRestaurantDetails(restaurant.id));
+      dispatch(getAllRestaurants());
+      dispatch(getRestaurantDetails(restaurant.id));
     } catch {}
   };
 
