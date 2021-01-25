@@ -3,6 +3,7 @@ using Restaurant.WebApi.Constants;
 using Restaurant.WebApi.Models;
 using Restaurant.WebApi.Services.Token;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static Restaurant.WebApi.Helpers.ErrorHelper;
@@ -114,8 +115,24 @@ namespace Restaurant.WebApi.Services.User
             }
         }
 
-        public async Task<CreateUserResponse> CreateOwnerAsync(CreateUserRequest request)
+        public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest request)
         {
+            if (request.Role == Roles.ADMIN)
+                return new CreateUserResponse
+                {
+                    Errors = CreateError("CreateUser", "Invalid role."),
+                };
+
+            if (string.IsNullOrEmpty(request.Role))
+                request.Role = Roles.REGULAR;
+
+            var allowedRoles = new[] { Roles.OWNER, Roles.REGULAR };
+            if (!allowedRoles.Contains(request.Role))
+                return new CreateUserResponse
+                {
+                    Errors = CreateError("CreateUser", "Inavalid role."),
+                };
+
             try
             {
                 var user = await CreateUserWithRole(
@@ -123,17 +140,17 @@ namespace Restaurant.WebApi.Services.User
                     request.Password,
                     request.FirstName,
                     request.LastName,
-                    Roles.OWNER);
+                    request.Role);
                 return new CreateUserResponse
                 {
-                    Message = "Owner creation was successful."
+                    Message = "User creation was successful."
                 };
             }
             catch (Exception e)
             {
                 return new CreateUserResponse
                 {
-                    Errors = CreateError("CreateOwner", e.Message),
+                    Errors = CreateError("CreateUser", e.Message),
                 };
             }
         }
@@ -150,11 +167,23 @@ namespace Restaurant.WebApi.Services.User
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             var result = await userManager.UpdateAsync(user);
+
             if (!result.Succeeded)
                 return new UpdateUserResponse
                 {
                     Errors = CreateError("EditUser", "Unable to update user.")
                 };
+
+            if (!string.IsNullOrEmpty(request.Password))
+            {
+                var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+                result = await userManager.ResetPasswordAsync(user, resetToken, request.Password);
+                if (!result.Succeeded)
+                    return new UpdateUserResponse
+                    {
+                        Errors = CreateError("EditUser", "Unable to reset password.")
+                    };
+            }
 
             return new UpdateUserResponse
             {
@@ -191,26 +220,35 @@ namespace Restaurant.WebApi.Services.User
                     Errors = CreateError("GetUserById", "User not found.")
                 };
 
+            var role = (await userManager.GetRolesAsync(user))[0];
+
             return new GetUserResponse
             {
                 Id = user.Id,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
-                LastName = user.LastName
+                LastName = user.LastName,
+                Role = role
             };
         }
 
         public async Task<GetAllUsersResponse> GetAllUsersAsync()
         {
-            var users = await Task.Run(() => userManager.Users);
-            var result = userManager.Users.Select(user => new GetUserResponse
+            var roles = await Task.Run(() => roleManager.Roles.OrderBy(r => r.Name).ToList());
+            var users = new List<GetUserResponse>();
+            foreach(var role in roles)
             {
-                Id = user.Id,
-                UserName = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            });
-            return new GetAllUsersResponse { Users = result.ToList() };
+                var usersInRole = await userManager.GetUsersInRoleAsync(role.Name);
+                users.AddRange(usersInRole.Select(user => new GetUserResponse
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Role = role.Name
+                }));
+            }
+            return new GetAllUsersResponse { Users = users };
         }
 
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request)

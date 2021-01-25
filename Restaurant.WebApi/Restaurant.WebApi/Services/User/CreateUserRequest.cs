@@ -21,5 +21,8 @@ namespace Restaurant.WebApi.Services.User
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
+
+        [StringLength(256)]
+        public string Role { get; set; }
     }
 }

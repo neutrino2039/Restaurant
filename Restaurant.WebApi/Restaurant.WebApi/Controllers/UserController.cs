@@ -31,29 +31,29 @@ namespace Restaurant.WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.ADMIN)]
-        [HttpPost("CreateOwner")]
-        public async Task<IActionResult> CreateOwnerAsync(CreateUserRequest request)
+        [HttpPost("Create")]
+        public async Task<IActionResult> CreateUserAsync(CreateUserRequest request)
         {
-            return ApiResult(await userService.CreateOwnerAsync(request));
+            return ApiResult(await userService.CreateUserAsync(request));
         }
 
         [Authorize(Roles = Roles.ADMIN)]
-        [HttpPost("UpdateUser")]
+        [HttpPost("Update")]
         public async Task<IActionResult> UpdateUserAsync(UpdateUserRequest request)
         {
             return ApiResult(await userService.UpdateUserAsync(request));
         }
 
         [Authorize(Roles = Roles.ADMIN)]
-        [HttpPost("DeleteUser")]
+        [HttpPost("Delete")]
         public async Task<IActionResult> DeleteUserAsync(DeleteUserRequest request)
         {
             return ApiResult(await userService.DeleteUserAsync(request));
         }
 
         [Authorize(Roles = Roles.ALL)]
-        [HttpPost("GetUserById")]
-        public async Task<IActionResult> GetUserByIdAsync(GetUserRequest request)
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetUserByIdAsync([FromQuery]GetUserRequest request)
         {
             if (CurrentUserNotAuthorizedFor(request.Id))
                 return AuthorizationResult(new GetUserResponse
@@ -70,7 +70,7 @@ namespace Restaurant.WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.ADMIN)]
-        [HttpPost("GetAllUsers")]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllUsersAsync()
         {
             return ApiResult(await userService.GetAllUsersAsync());
