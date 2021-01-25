@@ -67,7 +67,9 @@ export default ({route, navigation}) => {
         }}
         renderItem={({item}) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('UpdateDeleteReview')}>
+            onPress={() =>
+              navigation.navigate('UpdateDeleteReview', {review: item})
+            }>
             <ReviewCard style={styles.card} title="Review" data={item} />
           </TouchableOpacity>
         )}

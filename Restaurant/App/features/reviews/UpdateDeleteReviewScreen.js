@@ -3,58 +3,62 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, ToastAndroid, View} from 'react-native';
 import {
   clearErrors,
-  deleteUser,
-  getAllUsers,
+  deleteReview,
+  getAllReviewsByRestaurantId,
   setErrors,
-  updateUser,
-} from './UsersSlice';
+  updateReview,
+} from './ReviewSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  validateConfirmPassword,
-  validateFirstName,
-  validateLastName,
-  validatePassword,
-} from '../../validations/user';
+  validateComment,
+  validateRating,
+  validateReply,
+} from '../../validations/review';
 
 import ErrorView from '../components/ErrorView';
 import {ScrollView} from 'react-native-gesture-handler';
+import StarRating from '../home/components/StarRating';
+import {getAllRestaurants} from '../home/RestaurantsSlice';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
 
 export default ({route, navigation}) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [stars, setStars] = useState(0);
+  const [comment, setComment] = useState('');
+  const [reply, setReply] = useState('');
 
-  const user = route.params.user;
+  const review = route.params.review;
 
   useEffect(() => {
-    setFirstName(user.firstName);
-    setLastName(user.lastName);
-  }, [setFirstName, setLastName, user]);
+    setStars(review.stars);
+    setComment(review.comment);
+    setReply(review.reply);
+  }, [setStars, setComment, setReply, review]);
 
   const dispatch = useDispatch();
 
-  const users = useSelector((state) => state.users);
-  const status = users.status;
-  const errors = users.errors;
+  const reviews = useSelector((state) => state.reviews);
+  const status = reviews.status;
+  const errors = reviews.errors;
 
   const onUpdateButtonPress = async () => {
     if (!(await validate())) return;
     try {
       const action = await dispatch(
-        updateUser({
-          id: user.id,
-          firstName,
-          lastName,
-          password: password || null,
+        updateReview({
+          id: review.id,
+          stars,
+          reply,
+          comment,
         }),
       );
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllUsers());
-        ToastAndroid.show('User saved', ToastAndroid.LONG);
+        await dispatch(
+          getAllReviewsByRestaurantId({restaurantId: review.restaurantId}),
+        );
+        ToastAndroid.show('Review updated', ToastAndroid.LONG);
+        dispatch(getAllRestaurants());
         navigation.goBack();
       }
     } catch (error) {}
@@ -62,13 +66,10 @@ export default ({route, navigation}) => {
 
   const validate = async () => {
     let rules = [
-      [validateFirstName, firstName],
-      [validateLastName, lastName],
+      [validateRating, stars],
+      [validateComment, comment],
     ];
-    if (password || confirmPassword) {
-      rules.push([validatePassword, password]);
-      rules.push([validateConfirmPassword, {password, confirmPassword}]);
-    }
+    if (reply) rules.push([validateReply, reply]);
     const result = validateAll(rules);
     await dispatch(setErrors(result));
     return result == null;
@@ -76,11 +77,14 @@ export default ({route, navigation}) => {
 
   const onDeleteButtonPress = async () => {
     try {
-      const action = await dispatch(deleteUser({id: user.id}));
+      const action = await dispatch(deleteReview({id: review.id}));
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllUsers());
-        ToastAndroid.show('User deleted', ToastAndroid.LONG);
+        await dispatch(
+          getAllReviewsByRestaurantId({restaurantId: review.restaurantId}),
+        );
+        ToastAndroid.show('Review deleted', ToastAndroid.LONG);
+        dispatch(getAllRestaurants());
         navigation.goBack();
       }
     } catch (error) {}
@@ -90,29 +94,24 @@ export default ({route, navigation}) => {
     <View style={styles.container}>
       <ErrorView errors={errors} onClosePress={() => dispatch(clearErrors())} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Input
-          label="Password"
-          leftIcon={{type: 'font-awesome', name: 'lock'}}
-          secureTextEntry={true}
-          onChangeText={(value) => setPassword(value)}
+        <StarRating
+          disabled={false}
+          rating={stars}
+          selectedStar={(value) => setStars(value)}
         />
         <Input
-          label="Confirm Password"
-          leftIcon={{type: 'font-awesome', name: 'lock'}}
-          secureTextEntry={true}
-          onChangeText={(value) => setConfirmPassword(value)}
+          label="Comment"
+          value={comment}
+          multiline={true}
+          leftIcon={{type: 'font-awesome', name: 'comment'}}
+          onChangeText={(value) => setComment(value)}
         />
         <Input
-          label="First Name"
-          value={firstName}
-          leftIcon={{type: 'font-awesome', name: 'info-circle'}}
-          onChangeText={(value) => setFirstName(value)}
-        />
-        <Input
-          label="Last Name"
-          value={lastName}
-          leftIcon={{type: 'font-awesome', name: 'info-circle'}}
-          onChangeText={(value) => setLastName(value)}
+          label="Reply"
+          value={reply}
+          multiline={true}
+          leftIcon={{type: 'font-awesome', name: 'reply'}}
+          onChangeText={(value) => setReply(value || '')}
         />
         <Button
           title="Update"

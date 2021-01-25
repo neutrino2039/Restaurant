@@ -32,6 +32,23 @@ export const createReview = createAsyncThunk(
     ),
 );
 
+export const updateReview = createAsyncThunk(
+  'review/update',
+  async ({id, stars, comment, reply}, thunkAPI) => {
+    return thunkHandler(
+      post('Review/Update', {id, stars, comment, reply}),
+      thunkAPI,
+    );
+  },
+);
+
+export const deleteReview = createAsyncThunk(
+  'review/delete',
+  async ({id}, thunkAPI) => {
+    return thunkHandler(post('Review/Delete', {id}), thunkAPI);
+  },
+);
+
 const reviewSlice = createSlice({
   name: 'reviews',
   initialState,
@@ -84,6 +101,32 @@ const reviewSlice = createSlice({
       state.errors = null;
     },
     [createReview.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.errors = action.payload;
+    },
+
+    [updateReview.pending]: (state, action) => {
+      state.status = 'updating';
+      state.errors = null;
+    },
+    [updateReview.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.errors = null;
+    },
+    [updateReview.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.errors = action.payload;
+    },
+
+    [deleteReview.pending]: (state, action) => {
+      state.status = 'deleting';
+      state.errors = null;
+    },
+    [deleteReview.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.errors = null;
+    },
+    [deleteReview.rejected]: (state, action) => {
       state.status = 'failed';
       state.errors = action.payload;
     },

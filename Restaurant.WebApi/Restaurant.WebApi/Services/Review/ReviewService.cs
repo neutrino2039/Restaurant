@@ -206,7 +206,7 @@ namespace Restaurant.WebApi.Services.Review
 
             review.Stars = request.Stars;
             review.Comment = request.Comment;
-            review.Reply = review.Reply is null ? null : request.Reply;
+            review.Reply = string.IsNullOrEmpty(request.Reply) ? null : request.Reply;
             var result = await db.SaveChangesAsync();
             if (result != 1)
                 return new UpdateReviewResponse
