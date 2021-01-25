@@ -45,8 +45,8 @@ export default ({navigation}) => {
       );
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllUsers());
         ToastAndroid.show('User saved', ToastAndroid.LONG);
+        dispatch(getAllUsers());
         navigation.goBack();
       }
     } catch (error) {}
