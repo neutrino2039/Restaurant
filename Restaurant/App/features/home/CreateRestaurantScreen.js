@@ -40,8 +40,8 @@ export default ({navigation}) => {
       );
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllRestaurants());
         ToastAndroid.show('Restaurant saved', ToastAndroid.LONG);
+        dispatch(getAllRestaurants());
         navigation.goBack();
       }
     } catch (error) {}
