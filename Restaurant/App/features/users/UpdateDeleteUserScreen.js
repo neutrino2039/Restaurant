@@ -53,8 +53,8 @@ export default ({route, navigation}) => {
       );
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllUsers());
         ToastAndroid.show('User saved', ToastAndroid.LONG);
+        dispatch(getAllUsers());
         navigation.goBack();
       }
     } catch (error) {}
@@ -79,8 +79,8 @@ export default ({route, navigation}) => {
       const action = await dispatch(deleteUser({id: user.id}));
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllUsers());
         ToastAndroid.show('User deleted', ToastAndroid.LONG);
+        dispatch(getAllUsers());
         navigation.goBack();
       }
     } catch (error) {}
