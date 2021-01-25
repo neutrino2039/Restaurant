@@ -18,6 +18,7 @@ import {
 import ErrorView from '../components/ErrorView';
 import {ScrollView} from 'react-native-gesture-handler';
 import StarRating from '../home/components/StarRating';
+import {confirmDelete} from '../../utilities/device';
 import {getAllRestaurants} from '../home/RestaurantsSlice';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
@@ -76,18 +77,24 @@ export default ({route, navigation}) => {
   };
 
   const onDeleteButtonPress = async () => {
-    try {
-      const action = await dispatch(deleteReview({id: review.id}));
-      const result = unwrapResult(action);
-      if (!result.errors) {
-        await dispatch(
-          getAllReviewsByRestaurantId({restaurantId: review.restaurantId}),
-        );
-        ToastAndroid.show('Review deleted', ToastAndroid.LONG);
-        dispatch(getAllRestaurants());
-        navigation.goBack();
-      }
-    } catch (error) {}
+    confirmDelete({
+      title: 'Delete Review',
+      message: 'Do you want to delete this review?',
+      onYesPress: async () => {
+        try {
+          const action = await dispatch(deleteReview({id: review.id}));
+          const result = unwrapResult(action);
+          if (!result.errors) {
+            await dispatch(
+              getAllReviewsByRestaurantId({restaurantId: review.restaurantId}),
+            );
+            ToastAndroid.show('Review deleted', ToastAndroid.LONG);
+            dispatch(getAllRestaurants());
+            navigation.goBack();
+          }
+        } catch (error) {}
+      },
+    });
   };
 
   return (

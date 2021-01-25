@@ -18,6 +18,7 @@ import {
 
 import ErrorView from '../components/ErrorView';
 import {ScrollView} from 'react-native-gesture-handler';
+import {confirmDelete} from '../../utilities/device';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
 
@@ -75,15 +76,21 @@ export default ({route, navigation}) => {
   };
 
   const onDeleteButtonPress = async () => {
-    try {
-      const action = await dispatch(deleteUser({id: user.id}));
-      const result = unwrapResult(action);
-      if (!result.errors) {
-        ToastAndroid.show('User deleted', ToastAndroid.LONG);
-        dispatch(getAllUsers());
-        navigation.goBack();
-      }
-    } catch (error) {}
+    confirmDelete({
+      title: 'Delete User',
+      message: 'Do you want to delete this user?',
+      onYesPress: async () => {
+        try {
+          const action = await dispatch(deleteUser({id: user.id}));
+          const result = unwrapResult(action);
+          if (!result.errors) {
+            ToastAndroid.show('User deleted', ToastAndroid.LONG);
+            dispatch(getAllUsers());
+            navigation.goBack();
+          }
+        } catch (error) {}
+      },
+    });
   };
 
   return (

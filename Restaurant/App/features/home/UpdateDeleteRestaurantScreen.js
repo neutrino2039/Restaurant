@@ -19,6 +19,7 @@ import {
 
 import ErrorView from '../components/ErrorView';
 import {ScrollView} from 'react-native-gesture-handler';
+import {confirmDelete} from '../../utilities/device';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {serverImage} from '../../apis/api';
 import {unwrapResult} from '@reduxjs/toolkit';
@@ -65,15 +66,21 @@ export default ({route, navigation}) => {
   };
 
   const onDeleteButtonPress = async () => {
-    try {
-      const action = await dispatch(deleteRestaurant({id: restaurant.id}));
-      const result = unwrapResult(action);
-      if (!result.errors) {
-        ToastAndroid.show('Restaurant deleted', ToastAndroid.LONG);
-        dispatch(getAllRestaurants());
-        navigation.goBack();
-      }
-    } catch (error) {}
+    confirmDelete({
+      title: 'Delete Restaurant',
+      message: 'Do you want to delete this restaurant?',
+      onYesPress: async () => {
+        try {
+          const action = await dispatch(deleteRestaurant({id: restaurant.id}));
+          const result = unwrapResult(action);
+          if (!result.errors) {
+            ToastAndroid.show('Restaurant deleted', ToastAndroid.LONG);
+            dispatch(getAllRestaurants());
+            navigation.goBack();
+          }
+        } catch (error) {}
+      },
+    });
   };
 
   const validate = async () => {

@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
 
@@ -45,4 +46,22 @@ export const accessTokenExists = async () => {
 
 export const relativeTime = (dateTime) => {
   return Moment.utc(dateTime).fromNow();
+};
+
+export const confirmDelete = ({title, message, onYesPress = () => {}}) => {
+  Alert.alert(
+    title,
+    message,
+    [
+      {
+        text: 'No',
+        onPress: () => {
+          console.log('delete canceled.');
+        },
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: onYesPress},
+    ],
+    {cancelable: false},
+  );
 };
