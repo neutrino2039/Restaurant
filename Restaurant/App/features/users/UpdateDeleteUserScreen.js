@@ -1,29 +1,38 @@
 import {Button, CheckBox, Input} from 'react-native-elements';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, ToastAndroid, View} from 'react-native';
-import {clearErrors, createUser, getAllUsers, setErrors} from './UsersSlice';
+import {
+  clearErrors,
+  deleteUser,
+  getAllUsers,
+  setErrors,
+  updateUser,
+} from './UsersSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   validateConfirmPassword,
   validateFirstName,
   validateLastName,
   validatePassword,
-  validateUserName,
 } from '../../validations/user';
 
 import ErrorView from '../components/ErrorView';
-import {ROLES} from '../authentication/AuthenticationSlice';
 import {ScrollView} from 'react-native-gesture-handler';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
 
-export default ({navigation}) => {
-  const [userName, setUserName] = useState('');
+export default ({route, navigation}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isOwner, setOwner] = useState(false);
+
+  const user = route.params.user;
+
+  useEffect(() => {
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+  }, [setFirstName, setLastName, user]);
 
   const dispatch = useDispatch();
 
@@ -31,19 +40,19 @@ export default ({navigation}) => {
   const status = users.status;
   const errors = users.errors;
 
-  const onSaveButtonPress = async () => {
+  const onUpdateButtonPress = async () => {
     if (!(await validate())) return;
     try {
       const action = await dispatch(
-        createUser({
-          userName,
+        updateUser({
+          id: user.id,
           firstName,
           lastName,
-          password,
-          role: isOwner ? ROLES.OWNER : ROLES.REGULAR,
+          password: password || null,
         }),
       );
       const result = unwrapResult(action);
+      console.log(result);
       if (!result.errors) {
         await dispatch(getAllUsers());
         ToastAndroid.show('User saved', ToastAndroid.LONG);
@@ -53,13 +62,17 @@ export default ({navigation}) => {
   };
 
   const validate = async () => {
-    const result = validateAll([
-      [validateUserName, userName],
+    let rules = [
       [validateFirstName, firstName],
       [validateLastName, lastName],
-      [validatePassword, password],
-      [validateConfirmPassword, {password, confirmPassword}],
-    ]);
+    ];
+    if (password || confirmPassword) {
+      rules.push([validatePassword, password]);
+      rules.push([validateConfirmPassword, {password, confirmPassword}]);
+    }
+    console.log(password);
+    console.log(rules);
+    const result = validateAll(rules);
     await dispatch(setErrors(result));
     return result == null;
   };
@@ -68,11 +81,6 @@ export default ({navigation}) => {
     <View style={styles.container}>
       <ErrorView errors={errors} onClosePress={() => dispatch(clearErrors())} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Input
-          label="User Name"
-          leftIcon={{type: 'font-awesome', name: 'user'}}
-          onChangeText={(value) => setUserName(value)}
-        />
         <Input
           label="Password"
           leftIcon={{type: 'font-awesome', name: 'lock'}}
@@ -87,26 +95,22 @@ export default ({navigation}) => {
         />
         <Input
           label="First Name"
+          value={firstName}
           leftIcon={{type: 'font-awesome', name: 'info-circle'}}
           onChangeText={(value) => setFirstName(value)}
         />
         <Input
           label="Last Name"
+          value={lastName}
           leftIcon={{type: 'font-awesome', name: 'info-circle'}}
           onChangeText={(value) => setLastName(value)}
         />
-        <CheckBox
-          title="Owner"
-          checked={isOwner}
-          onPress={() => setOwner(!isOwner)}
-          containerStyle={styles.checkBox}
-        />
         <Button
-          title="Save"
+          title="Update"
           icon={{type: 'font-awesome', name: 'user-plus'}}
-          containerStyle={styles.button}
-          loading={status === 'creating'}
-          onPress={onSaveButtonPress}
+          buttonStyle={styles.button}
+          loading={status === 'updating'}
+          onPress={onUpdateButtonPress}
         />
       </ScrollView>
     </View>
@@ -118,13 +122,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-  checkBox: {
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-    marginLeft: 0,
-    marginTop: 0,
-  },
   button: {
     marginTop: 10,
+  },
+  deleteButton: {
+    backgroundColor: '#d00',
   },
 });

@@ -42,13 +42,12 @@ export default ({route, navigation}) => {
 
   const restaurants = useSelector((state) => state.restaurants);
   const status = restaurants.status;
-  const loading = status === 'loading';
   const errors = restaurants.errors;
 
   const onUpdateButtonPress = async () => {
     if (!(await validate())) return;
     try {
-      await dispatch(
+      const action = await dispatch(
         updateRestaurant({
           id: restaurant.id,
           name,
@@ -56,18 +55,24 @@ export default ({route, navigation}) => {
           imageName: restaurants.imageName,
         }),
       );
-      await dispatch(getAllRestaurants());
-      ToastAndroid.show('Restaurant saved', ToastAndroid.LONG);
-      navigation.goBack();
+      const result = unwrapResult(action);
+      if (!result.errors) {
+        await dispatch(getAllRestaurants());
+        ToastAndroid.show('Restaurant saved', ToastAndroid.LONG);
+        navigation.goBack();
+      }
     } catch (error) {}
   };
 
   const onDeleteButtonPress = async () => {
     try {
-      await dispatch(deleteRestaurant({id: restaurant.id}));
-      await dispatch(getAllRestaurants());
-      ToastAndroid.show('Restaurant deleted', ToastAndroid.LONG);
-      navigation.goBack();
+      const action = await dispatch(deleteRestaurant({id: restaurant.id}));
+      const result = unwrapResult(action);
+      if (!result.errors) {
+        await dispatch(getAllRestaurants());
+        ToastAndroid.show('Restaurant deleted', ToastAndroid.LONG);
+        navigation.goBack();
+      }
     } catch (error) {}
   };
 
@@ -125,14 +130,14 @@ export default ({route, navigation}) => {
                 } catch {}
               })
             }
-            loading={restaurants.status === 'uploading'}
+            loading={status === 'uploading'}
           />
 
           <Button
             title="Update"
             icon={{type: 'font-awesome', name: 'user-plus'}}
             buttonStyle={styles.button}
-            loading={restaurants.status === 'updating'}
+            loading={status === 'updating'}
             onPress={onUpdateButtonPress}
           />
 

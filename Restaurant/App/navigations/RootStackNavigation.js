@@ -13,6 +13,7 @@ import React from 'react';
 import RegisterScreen from '../features/authentication/RegisterScreen';
 import SplashScreen from '../features/splash-screen/SplashScreen';
 import UpdateDeleteRestaurantScreen from '../features/home/UpdateDeleteRestaurantScreen';
+import UpdateDeleteUserScreen from '../features/users/UpdateDeleteUserScreen';
 import UsersScreen from '../features/users/UsersScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -70,6 +71,11 @@ export default () => {
               <Stack.Screen
                 name="CreateUser"
                 component={CreateUserScreen}
+                options={({route}) => ({headerTitle: getHeaderTitle(route)})}
+              />
+              <Stack.Screen
+                name="UpdateDeleteUser"
+                component={UpdateDeleteUserScreen}
                 options={({route}) => ({headerTitle: getHeaderTitle(route)})}
               />
             </>
@@ -131,5 +137,6 @@ const getHeaderTitle = (route) => {
   if (route.name === 'UpdateDeleteRestaurant')
     return 'Update/Delete Restaurant';
   if (route.name === 'CreateUser') return 'Create User';
+  if (route.name === 'UpdateDeleteUser') return 'Update/Delete User';
   return route.name;
 };
