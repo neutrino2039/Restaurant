@@ -103,7 +103,7 @@ export default ({navigation}) => {
         />
         <Button
           title="Save"
-          icon={{type: 'font-awesome', name: 'user-plus'}}
+          icon={{type: 'font-awesome', name: 'save'}}
           containerStyle={styles.button}
           loading={status === 'creating'}
           onPress={onSaveButtonPress}

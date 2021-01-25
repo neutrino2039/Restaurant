@@ -115,7 +115,7 @@ export default ({route, navigation}) => {
         />
         <Button
           title="Update"
-          icon={{type: 'font-awesome', name: 'user-plus'}}
+          icon={{type: 'font-awesome', name: 'edit'}}
           buttonStyle={styles.button}
           loading={status === 'updating'}
           onPress={onUpdateButtonPress}
