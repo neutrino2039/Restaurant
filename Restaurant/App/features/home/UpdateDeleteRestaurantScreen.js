@@ -145,7 +145,7 @@ export default ({route, navigation}) => {
             title="Delete"
             icon={{type: 'font-awesome', name: 'trash'}}
             buttonStyle={[styles.button, styles.deleteButton]}
-            loading={restaurants.status === 'deleting'}
+            loading={status === 'deleting'}
             onPress={onDeleteButtonPress}
           />
         </View>

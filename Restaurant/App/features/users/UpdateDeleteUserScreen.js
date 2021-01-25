@@ -77,6 +77,19 @@ export default ({route, navigation}) => {
     return result == null;
   };
 
+  const onDeleteButtonPress = async () => {
+    try {
+      const action = await dispatch(deleteUser({id: user.id}));
+      const result = unwrapResult(action);
+      console.log(result);
+      if (!result.errors) {
+        await dispatch(getAllUsers());
+        ToastAndroid.show('User deleted', ToastAndroid.LONG);
+        navigation.goBack();
+      }
+    } catch (error) {}
+  };
+
   return (
     <View style={styles.container}>
       <ErrorView errors={errors} onClosePress={() => dispatch(clearErrors())} />
@@ -111,6 +124,13 @@ export default ({route, navigation}) => {
           buttonStyle={styles.button}
           loading={status === 'updating'}
           onPress={onUpdateButtonPress}
+        />
+        <Button
+          title="Delete"
+          icon={{type: 'font-awesome', name: 'trash'}}
+          buttonStyle={[styles.button, styles.deleteButton]}
+          loading={status === 'deleting'}
+          onPress={onDeleteButtonPress}
         />
       </ScrollView>
     </View>

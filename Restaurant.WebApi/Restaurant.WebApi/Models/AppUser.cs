@@ -14,6 +14,8 @@ namespace Restaurant.WebApi.Models
         [Column(TypeName = "nvarchar(50)")]
         public string LastName { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public ICollection<Restaurant> Restaurants { get; set; }
 
         public ICollection<Review> Reviews { get; set; }

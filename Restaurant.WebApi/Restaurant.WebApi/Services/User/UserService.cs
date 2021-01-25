@@ -71,7 +71,7 @@ namespace Restaurant.WebApi.Services.User
                 new LoginResponse { Errors = CreateError("Login", "Invalid user name or password.") };
 
             var user = await userManager.FindByNameAsync(request.UserName);
-            if (user == null) return invalidCredentialsReponse;
+            if (user == null || user.IsDeleted) return invalidCredentialsReponse;
 
             if (!await userManager.CheckPasswordAsync(user, request.Password))
                 return invalidCredentialsReponse;
@@ -158,7 +158,7 @@ namespace Restaurant.WebApi.Services.User
         public async Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest request)
         {
             var user = await userManager.FindByIdAsync(request.Id);
-            if (user is null)
+            if (user is null || user.IsDeleted)
                 return new UpdateUserResponse
                 {
                     Errors = CreateError("EditUser", "Invalid user ID")
@@ -199,9 +199,11 @@ namespace Restaurant.WebApi.Services.User
             };
 
             var user = await userManager.FindByIdAsync(request.Id);
-            if (user is null) return userDeletedReponse;
+            if (user is null || user.IsDeleted) return userDeletedReponse;
 
-            var result = await userManager.DeleteAsync(user);
+            user.IsDeleted = true;
+
+            var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)
                 return new DeleteUserResponse
                 {
@@ -214,7 +216,7 @@ namespace Restaurant.WebApi.Services.User
         public async Task<GetUserResponse> GetUserByIdAsync(GetUserRequest request)
         {
             var user = await userManager.FindByIdAsync(request.Id);
-            if (user is null)
+            if (user is null || user.IsDeleted)
                 return new GetUserResponse
                 {
                     Errors = CreateError("GetUserById", "User not found.")
@@ -239,7 +241,7 @@ namespace Restaurant.WebApi.Services.User
             foreach(var role in roles)
             {
                 var usersInRole = await userManager.GetUsersInRoleAsync(role.Name);
-                users.AddRange(usersInRole.Select(user => new GetUserResponse
+                users.AddRange(usersInRole.Where(u => !u.IsDeleted).Select(user => new GetUserResponse
                 {
                     Id = user.Id,
                     UserName = user.UserName,
@@ -260,7 +262,7 @@ namespace Restaurant.WebApi.Services.User
                 };
 
             var user = await userManager.FindByIdAsync(request.Id);
-            if (user is null) return invalidCredentialsReponse;
+            if (user is null || user.IsDeleted) return invalidCredentialsReponse;
 
             if (!await userManager.CheckPasswordAsync(user, request.OldPassword))
                 return invalidCredentialsReponse;
