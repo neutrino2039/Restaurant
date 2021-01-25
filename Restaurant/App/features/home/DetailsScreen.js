@@ -5,8 +5,8 @@ import {clearErrors, getRestaurantDetails} from './RestaurantDetailsSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 import ErrorView from '../components/ErrorView';
-import NewReview from './components/NewReview';
-import ReviewCard from './components/ReviewCard';
+import NewReview from '../reviews/components/NewReview';
+import ReviewCard from '../reviews/components/ReviewCard';
 import {ScrollView} from 'react-native-gesture-handler';
 import StarRating from './components/StarRating';
 import {serverImage} from '../../apis/api';

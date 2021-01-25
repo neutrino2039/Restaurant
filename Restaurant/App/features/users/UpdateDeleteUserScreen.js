@@ -52,7 +52,6 @@ export default ({route, navigation}) => {
         }),
       );
       const result = unwrapResult(action);
-      console.log(result);
       if (!result.errors) {
         await dispatch(getAllUsers());
         ToastAndroid.show('User saved', ToastAndroid.LONG);
@@ -70,8 +69,6 @@ export default ({route, navigation}) => {
       rules.push([validatePassword, password]);
       rules.push([validateConfirmPassword, {password, confirmPassword}]);
     }
-    console.log(password);
-    console.log(rules);
     const result = validateAll(rules);
     await dispatch(setErrors(result));
     return result == null;
@@ -81,7 +78,6 @@ export default ({route, navigation}) => {
     try {
       const action = await dispatch(deleteUser({id: user.id}));
       const result = unwrapResult(action);
-      console.log(result);
       if (!result.errors) {
         await dispatch(getAllUsers());
         ToastAndroid.show('User deleted', ToastAndroid.LONG);

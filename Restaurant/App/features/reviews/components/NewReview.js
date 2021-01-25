@@ -6,15 +6,15 @@ import {
   createReview,
   getReviewByRestaurantId,
   setErrors,
-} from './ReviewSlice';
+} from '../ReviewSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {validateComment, validateRating} from '../../../validations/review';
 
 import ErrorView from '../../components/ErrorView';
-import Line from './Line';
-import StarRating from './StarRating';
-import {getAllRestaurants} from '../RestaurantsSlice';
-import {getRestaurantDetails} from '../RestaurantDetailsSlice';
+import Line from '../../home/components/Line';
+import StarRating from '../../home/components/StarRating';
+import {getAllRestaurants} from '../../home/RestaurantsSlice';
+import {getRestaurantDetails} from '../../home/RestaurantDetailsSlice';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {useState} from 'react';
 import {validateAll} from '../../../validations/validation';
@@ -32,12 +32,12 @@ export default ({restaurant, style}) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
 
-  const review = useSelector((state) => state.review);
-  const errors = review.errors;
+  const reviews = useSelector((state) => state.reviews);
+  const errors = reviews.errors;
 
-  const loading = review.status === 'loading';
+  const loading = reviews.status === 'loading';
 
-  const alreadyReviewed = review.data !== null;
+  const alreadyReviewed = reviews.data !== null;
 
   const onSubmitButtonPress = async () => {
     if (!(await validate())) return;
@@ -69,13 +69,13 @@ export default ({restaurant, style}) => {
       <Line />
       <StarRating
         disabled={loading || alreadyReviewed}
-        rating={review?.data?.stars || rating}
+        rating={reviews?.data?.stars || rating}
         selectedStar={(stars) => setRating(stars)}
       />
       <Input
         label="Comment"
         multiline={true}
-        value={review?.data?.comment}
+        value={reviews?.data?.comment}
         onChangeText={(value) => setComment(value)}
         disabled={loading || alreadyReviewed}
       />

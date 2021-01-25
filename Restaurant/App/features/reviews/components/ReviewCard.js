@@ -1,8 +1,8 @@
 import {StyleSheet, View} from 'react-native';
 
-import Line from './Line';
+import Line from '../../home/components/Line';
 import React from 'react';
-import StarRating from './StarRating';
+import StarRating from '../../home/components/StarRating';
 import {Text} from 'react-native-elements';
 import {relativeTime} from '../../../utilities/device';
 

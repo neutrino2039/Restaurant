@@ -4,7 +4,7 @@ import authenticationReducer from './features/authentication/AuthenticationSlice
 import pendingReviewsReducer from './features/pending-reviews/PendingReviewsSlice';
 import restaurantDetailsReducer from './features/home/RestaurantDetailsSlice';
 import restaurantsReducer from './features/home/RestaurantsSlice';
-import reviewReducer from './features/home/components/ReviewSlice';
+import reviewsReducer from './features/reviews/ReviewSlice';
 import splashScreenReducer from './features/splash-screen/SplashScreenSlice';
 import usersReducer from './features/users/UsersSlice';
 
@@ -14,7 +14,7 @@ export const store = configureStore({
     authentication: authenticationReducer,
     restaurants: restaurantsReducer,
     restaurantDetails: restaurantDetailsReducer,
-    review: reviewReducer,
+    reviews: reviewsReducer,
     pendingReviews: pendingReviewsReducer,
     users: usersReducer,
   },

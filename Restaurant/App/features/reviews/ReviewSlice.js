@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {get, post, thunkHandler} from '../../../apis/api';
+import {get, post, thunkHandler} from '../../apis/api';
 
 const initialState = {
   data: null,
@@ -27,7 +27,7 @@ export const getReviewByRestaurantId = createAsyncThunk(
 );
 
 const reviewSlice = createSlice({
-  name: 'review',
+  name: 'reviews',
   initialState,
   reducers: {
     setErrors: (state, action) => {
