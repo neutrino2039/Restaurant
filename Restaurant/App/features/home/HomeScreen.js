@@ -38,7 +38,7 @@ export default ({navigation}) => {
   const status = restaurants.status;
   const errors = restaurants.errors;
 
-  if (status === 'loading' && !refreshing)
+  if (status !== 'succeeded' && !refreshing)
     return (
       <View style={styles.noDataContainer}>
         <ActivityIndicator size="large" color="darkblue" />

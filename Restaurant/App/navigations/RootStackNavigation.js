@@ -12,6 +12,7 @@ import React from 'react';
 import RegisterScreen from '../features/authentication/RegisterScreen';
 import SplashScreen from '../features/splash-screen/SplashScreen';
 import UpdateDeleteRestaurantScreen from '../features/home/UpdateDeleteRestaurantScreen';
+import UsersScreen from '../features/users/UsersScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
@@ -73,30 +74,45 @@ export default () => {
   );
 };
 
-const BottomTabBar = () => (
-  <Tab.Navigator tabBarOptions={{activeTintColor: 'brown'}}>
-    <Tab.Screen
-      name="Home"
-      component={HomeScreen}
-      options={{
-        tabBarIcon: ({color}) => (
-          <Icon type="font-awesome" name="home" color={color} />
-        ),
-        tabBarLabel: 'Home',
-      }}
-    />
-    <Tab.Screen
-      name="Profile"
-      component={ProfileScreen}
-      options={{
-        tabBarIcon: ({color}) => (
-          <Icon type="font-awesome" name="user" color={color} />
-        ),
-        tabBarLabel: 'Profile',
-      }}
-    />
-  </Tab.Navigator>
-);
+const BottomTabBar = () => {
+  const authentication = useSelector((state) => state.authentication);
+  return (
+    <Tab.Navigator tabBarOptions={{activeTintColor: 'brown'}}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon type="font-awesome" name="home" color={color} />
+          ),
+          tabBarLabel: 'Home',
+        }}
+      />
+      {authentication.role === ROLES.ADMIN && (
+        <Tab.Screen
+          name="Users"
+          component={UsersScreen}
+          options={{
+            tabBarIcon: ({color}) => (
+              <Icon type="font-awesome" name="users" color={color} />
+            ),
+            tabBarLabel: 'Users',
+          }}
+        />
+      )}
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon type="font-awesome" name="address-card" color={color} />
+          ),
+          tabBarLabel: 'Profile',
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 function getHeaderTitleForTabBar(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
