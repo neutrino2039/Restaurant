@@ -6,6 +6,7 @@ import restaurantDetailsReducer from './features/home/RestaurantDetailsSlice';
 import restaurantsReducer from './features/home/RestaurantsSlice';
 import reviewReducer from './features/home/components/ReviewSlice';
 import splashScreenReducer from './features/splash-screen/SplashScreenSlice';
+import usersReducer from './features/users/UsersSlice';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     restaurantDetails: restaurantDetailsReducer,
     review: reviewReducer,
     pendingReviews: pendingReviewsReducer,
+    users: usersReducer,
   },
   middleware: [...getDefaultMiddleware()],
 });
