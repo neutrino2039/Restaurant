@@ -19,6 +19,7 @@ import ErrorView from '../components/ErrorView';
 import {ScrollView} from 'react-native-gesture-handler';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {serverImage} from '../../apis/api';
+import {unwrapResult} from '@reduxjs/toolkit';
 import {validateAll} from '../../validations/validation';
 
 export default ({navigation}) => {
@@ -29,18 +30,20 @@ export default ({navigation}) => {
 
   const restaurants = useSelector((state) => state.restaurants);
   const status = restaurants.status;
-  const loading = status === 'loading';
   const errors = restaurants.errors;
 
   const onSaveButtonPress = async () => {
     if (!(await validate())) return;
     try {
-      await dispatch(
+      const action = await dispatch(
         createRestaurant({name, address, imageName: restaurants.imageName}),
       );
-      await dispatch(getAllRestaurants());
-      ToastAndroid.show('Restaurant saved', ToastAndroid.LONG);
-      navigation.goBack();
+      const result = unwrapResult(action);
+      if (!result.errors) {
+        await dispatch(getAllRestaurants());
+        ToastAndroid.show('Restaurant saved', ToastAndroid.LONG);
+        navigation.goBack();
+      }
     } catch (error) {}
   };
 
@@ -92,14 +95,14 @@ export default ({navigation}) => {
                 );
               })
             }
-            loading={restaurants.status === 'uploading'}
+            loading={status === 'uploading'}
           />
 
           <Button
             title="Save"
             icon={{type: 'font-awesome', name: 'user-plus'}}
             containerStyle={styles.button}
-            loading={restaurants.status === 'creating'}
+            loading={status === 'creating'}
             onPress={onSaveButtonPress}
           />
         </View>
