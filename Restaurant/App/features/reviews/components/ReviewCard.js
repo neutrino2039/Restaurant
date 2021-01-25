@@ -11,7 +11,8 @@ export default ({title, data, style}) => {
 
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.title}>{title}</Text>
+      {title && <Text style={styles.title}>{title}</Text>}
+      <Text style={styles.title}>{data.userName}</Text>
       <StarRating rating={data.stars} />
       <Line />
       <View style={styles.comment}>

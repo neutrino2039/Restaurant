@@ -95,7 +95,7 @@ export default ({route, navigation}) => {
         }}
         renderItem={({item}) => (
           <View style={styles.card}>
-            <Text style={styles.title}>Review</Text>
+            <Text style={styles.title}>{item.userName}</Text>
             <Line />
 
             <StarRating rating={item.stars} />

@@ -83,11 +83,13 @@ namespace Restaurant.WebApi.Services.Review
         {
             var reviews = db.Reviews
                 .Where(r => r.RestaurantId == request.RestaurantId)
+                .Include(r => r.User)
                 .Select(r => new GetReviewResponse
                 {
                     Id = r.Id,
                     RestaurantId = r.RestaurantId,
                     UserId = r.UserId,
+                    UserName = r.User.UserName,
                     Stars = r.Stars,
                     Comment = r.Comment,
                     VisitDate = r.VisitDate,
@@ -101,7 +103,8 @@ namespace Restaurant.WebApi.Services.Review
 
         public async Task<GetReviewResponse> GetReviewByIdAsync(GetReviewByIdRequest request)
         {
-            var review = await db.Reviews.FindAsync(request.Id);
+            var review = await Task.Run(() =>
+                db.Reviews.Where(r => r.Id == request.Id).Include(r => r.User).FirstOrDefault());
             if (review is null)
                 return new GetReviewResponse
                 {
@@ -113,6 +116,7 @@ namespace Restaurant.WebApi.Services.Review
                 Id = review.Id,
                 RestaurantId = review.RestaurantId,
                 UserId = review.UserId,
+                UserName = review.User.UserName,
                 Stars = review.Stars,
                 Comment = review.Comment,
                 VisitDate = review.VisitDate,
@@ -122,7 +126,11 @@ namespace Restaurant.WebApi.Services.Review
 
         public async Task<GetReviewResponse> GetReviewByRestaurantIdAsync(string userId, GetReviewByRestaurantIdRequest request)
         {
-            var review = await Task.Run(() => db.Reviews.Where(r => r.RestaurantId == request.RestaurantId && r.UserId == userId).FirstOrDefault());
+            var review = await Task.Run(() =>
+                db.Reviews
+                    .Where(r => r.RestaurantId == request.RestaurantId && r.UserId == userId)
+                    .Include(r => r.User)
+                    .FirstOrDefault());
             if (review is null)
                 return new GetReviewResponse
                 {
@@ -134,6 +142,7 @@ namespace Restaurant.WebApi.Services.Review
                 Id = review.Id,
                 RestaurantId = review.RestaurantId,
                 UserId = review.UserId,
+                UserName = review.User.UserName,
                 Stars = review.Stars,
                 Comment = review.Comment,
                 VisitDate = review.VisitDate,
@@ -145,11 +154,13 @@ namespace Restaurant.WebApi.Services.Review
         {
             var reviews = db.Reviews
                 .Where(r => r.RestaurantId == request.RestaurantId && r.Reply == null)
+                .Include(r => r.User)
                 .Select(r => new GetReviewResponse
                 {
                     Id = r.Id,
                     RestaurantId = r.RestaurantId,
                     UserId = r.UserId,
+                    UserName = r.User.UserName,
                     Stars = r.Stars,
                     Comment = r.Comment,
                     VisitDate = r.VisitDate,

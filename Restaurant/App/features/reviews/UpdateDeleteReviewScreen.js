@@ -1,6 +1,6 @@
 import {Button, Input} from 'react-native-elements';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ToastAndroid, View} from 'react-native';
+import {StyleSheet, Text, ToastAndroid, View} from 'react-native';
 import {
   clearErrors,
   deleteReview,
@@ -94,6 +94,7 @@ export default ({route, navigation}) => {
     <View style={styles.container}>
       <ErrorView errors={errors} onClosePress={() => dispatch(clearErrors())} />
       <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>{review.userName}</Text>
         <StarRating
           disabled={false}
           rating={stars}
@@ -136,6 +137,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    alignSelf: 'center',
   },
   button: {
     marginTop: 10,

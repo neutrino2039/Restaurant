@@ -214,11 +214,13 @@ namespace Restaurant.WebApi.Services.Restaurant
                 db.Reviews.Where(r => r.RestaurantId == restaurantId).Max(r => r.Stars));
             details.HighestRatedReview = await Task.Run(() => db.Reviews
                 .Where(r => r.RestaurantId == restaurantId && r.Stars == maxStars)
+                .Include(r => r.User)
                 .Select(r => new GetReviewResponse
                 {
                     Id = r.Id,
                     RestaurantId = r.RestaurantId,
                     UserId = r.UserId,
+                    UserName = r.User.UserName,
                     Stars = r.Stars,
                     Comment = r.Comment,
                     VisitDate = r.VisitDate,
@@ -229,11 +231,13 @@ namespace Restaurant.WebApi.Services.Restaurant
                 db.Reviews.Where(r => r.RestaurantId == restaurantId).Min(r => r.Stars));
             details.LowestRatedReview = await Task.Run(() => db.Reviews
                 .Where(r => r.RestaurantId == restaurantId && r.Stars == minStars)
+                .Include(r => r.User)
                 .Select(r => new GetReviewResponse
                 {
                     Id = r.Id,
                     RestaurantId = r.RestaurantId,
                     UserId = r.UserId,
+                    UserName = r.User.UserName,
                     Stars = r.Stars,
                     Comment = r.Comment,
                     VisitDate = r.VisitDate,
@@ -244,11 +248,13 @@ namespace Restaurant.WebApi.Services.Restaurant
                 db.Reviews.Where(r => r.RestaurantId == restaurantId).Max(r => r.Id));
             details.LastReview = await Task.Run(() => db.Reviews
                 .Where(r => r.RestaurantId == restaurantId && r.Id == last)
+                .Include(r => r.User)
                 .Select(r => new GetReviewResponse
                 {
                     Id = r.Id,
                     RestaurantId = r.RestaurantId,
                     UserId = r.UserId,
+                    UserName = r.User.UserName,
                     Stars = r.Stars,
                     Comment = r.Comment,
                     VisitDate = r.VisitDate,

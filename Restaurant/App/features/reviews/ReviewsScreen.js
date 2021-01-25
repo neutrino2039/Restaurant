@@ -70,7 +70,7 @@ export default ({route, navigation}) => {
             onPress={() =>
               navigation.navigate('UpdateDeleteReview', {review: item})
             }>
-            <ReviewCard style={styles.card} title="Review" data={item} />
+            <ReviewCard style={styles.card} data={item} />
           </TouchableOpacity>
         )}
       />
