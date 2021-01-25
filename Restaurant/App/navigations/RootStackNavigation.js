@@ -11,6 +11,7 @@ import ProfileScreen from '../features/profile/ProfileScreen';
 import {ROLES} from '../features/authentication/AuthenticationSlice';
 import React from 'react';
 import RegisterScreen from '../features/authentication/RegisterScreen';
+import ReviewsScreen from '../features/reviews/ReviewsScreen';
 import SplashScreen from '../features/splash-screen/SplashScreen';
 import UpdateDeleteRestaurantScreen from '../features/home/UpdateDeleteRestaurantScreen';
 import UpdateDeleteUserScreen from '../features/users/UpdateDeleteUserScreen';
@@ -78,6 +79,7 @@ export default () => {
                 component={UpdateDeleteUserScreen}
                 options={({route}) => ({headerTitle: getHeaderTitle(route)})}
               />
+              <Stack.Screen name="Reviews" component={ReviewsScreen} />
             </>
           )}
         </>

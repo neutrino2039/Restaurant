@@ -100,15 +100,16 @@ export default ({navigation}) => {
           setRefreshing(false);
         }}
         renderItem={({item}) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() =>
-              navigation.navigate(
-                role === ROLES.ADMIN ? 'UpdateDeleteRestaurant' : 'Details',
-                {restaurant: item},
-              )
-            }>
-            <View style={styles.restaurantDetails}>
+          <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.restaurantDetails}
+              containerStyle={styles.restaurantDetails}
+              onPress={() =>
+                navigation.navigate(
+                  role === ROLES.ADMIN ? 'UpdateDeleteRestaurant' : 'Details',
+                  {restaurant: item},
+                )
+              }>
               <Image
                 source={{uri: serverImage(item.imageName)}}
                 style={styles.image}
@@ -117,8 +118,17 @@ export default ({navigation}) => {
                 <Text style={styles.name}>{item.name}</Text>
                 <Text>{item.address}</Text>
               </View>
-            </View>
-            <View>
+            </TouchableOpacity>
+
+            <View style={styles.verticalLine} />
+            <TouchableOpacity
+              style={styles.rating}
+              onPress={() =>
+                navigation.navigate(
+                  role === ROLES.ADMIN ? 'Reviews' : 'Details',
+                  {restaurant: item},
+                )
+              }>
               <StarRating rating={item.averageStars} />
               {role === ROLES.OWNER && (
                 <>
@@ -127,8 +137,8 @@ export default ({navigation}) => {
                   </Text>
                 </>
               )}
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         )}
       />
     </View>
@@ -177,19 +187,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  starContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  ratingText: {
-    marginLeft: 5,
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: 'brown',
+  rating: {
+    height: '100%',
   },
   pendingReplies: {
     alignSelf: 'flex-end',
+  },
+  verticalLine: {
+    backgroundColor: 'brown',
+    width: 1,
+    height: '90%',
+    marginHorizontal: 10,
   },
 });

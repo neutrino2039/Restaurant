@@ -54,10 +54,10 @@ namespace Restaurant.WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.ALL)]
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllReviewsAsync()
+        [HttpGet("GetAllByRestaurantId")]
+        public async Task<IActionResult> GetAllReviewsByRestaurantIdAsync([FromQuery]GetAllReviewsByRestaurantIdRequest request)
         {
-            return ApiResult(await reviewService.GetAllReviewsAsync());
+            return ApiResult(await reviewService.GetAllReviewsByRestaurantId(request));
         }
 
         [Authorize(Roles = Roles.OWNER)]

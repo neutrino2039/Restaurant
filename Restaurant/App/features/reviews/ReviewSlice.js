@@ -7,6 +7,18 @@ const initialState = {
   errors: null,
 };
 
+export const getAllReviewsByRestaurantId = createAsyncThunk(
+  'review/getAllByRestaurantId',
+  async ({restaurantId}, thunkAPI) =>
+    thunkHandler(get('Review/GetAllByRestaurantId', {restaurantId}), thunkAPI),
+);
+
+export const getReviewByRestaurantId = createAsyncThunk(
+  'review/getByRestaurantId',
+  async ({restaurantId}, thunkAPI) =>
+    thunkHandler(get('Review/GetByRestaurantId', {restaurantId}), thunkAPI),
+);
+
 export const createReview = createAsyncThunk(
   'review/create',
   async ({restaurantId, stars, comment}, thunkAPI) =>
@@ -18,12 +30,6 @@ export const createReview = createAsyncThunk(
       }),
       thunkAPI,
     ),
-);
-
-export const getReviewByRestaurantId = createAsyncThunk(
-  'review/getByRestaurantId',
-  async ({restaurantId}, thunkAPI) =>
-    thunkHandler(get('Review/GetByRestaurantId', {restaurantId}), thunkAPI),
 );
 
 const reviewSlice = createSlice({
@@ -38,16 +44,17 @@ const reviewSlice = createSlice({
     },
   },
   extraReducers: {
-    [createReview.pending]: (state, action) => {
+    [getAllReviewsByRestaurantId.pending]: (state, action) => {
       state.status = 'loading';
       state.data = null;
       state.errors = null;
     },
-    [createReview.fulfilled]: (state, action) => {
+    [getAllReviewsByRestaurantId.fulfilled]: (state, action) => {
       state.status = 'succeeded';
+      state.data = action.payload.reviews;
       state.errors = null;
     },
-    [createReview.rejected]: (state, action) => {
+    [getAllReviewsByRestaurantId.rejected]: (state, action) => {
       state.status = 'failed';
       state.data = null;
       state.errors = action.payload;
@@ -66,6 +73,19 @@ const reviewSlice = createSlice({
     [getReviewByRestaurantId.rejected]: (state, action) => {
       state.status = 'failed';
       state.data = null;
+    },
+
+    [createReview.pending]: (state, action) => {
+      state.status = 'loading';
+      state.errors = null;
+    },
+    [createReview.fulfilled]: (state, action) => {
+      state.status = 'succeeded';
+      state.errors = null;
+    },
+    [createReview.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.errors = action.payload;
     },
   },
 });
