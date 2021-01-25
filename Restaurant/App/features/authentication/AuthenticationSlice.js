@@ -47,10 +47,11 @@ const authenticationSlice = createSlice({
     setAccessToken: (state, action) => {
       state.role = action.payload.role;
       state.token = action.payload.token;
-      state.isAuthenticated = action.payload !== null;
+      state.isAuthenticated = action.payload.token !== null;
     },
     logout: (state, action) => {
       state.token = '';
+      state.role = '';
       state.isAuthenticated = false;
     },
   },

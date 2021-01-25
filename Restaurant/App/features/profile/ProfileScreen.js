@@ -1,9 +1,9 @@
 import {StyleSheet, View} from 'react-native';
+import {removeAccessToken, removeFromDevice} from '../../utilities/device';
 
 import {Button} from 'react-native-elements';
 import React from 'react';
 import {logout} from '../authentication/AuthenticationSlice';
-import {removeAccessToken} from '../../utilities/device';
 import {useDispatch} from 'react-redux';
 
 export default ({navigation}) => {
@@ -11,6 +11,7 @@ export default ({navigation}) => {
 
   const onLogoutButtonPress = async () => {
     await removeAccessToken();
+    await removeFromDevice('role');
     await dispatch(logout());
   };
 
