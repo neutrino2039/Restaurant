@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 
 import CreateRestaurantScreen from '../features/home/CreateRestaurantScreen';
+import CreateUserScreen from '../features/users/CreateUserScreen';
 import DetailsScreen from '../features/home/DetailsScreen';
 import HomeScreen from '../features/home/HomeScreen';
 import {Icon} from 'react-native-elements';
@@ -66,6 +67,11 @@ export default () => {
                 component={UpdateDeleteRestaurantScreen}
                 options={({route}) => ({headerTitle: getHeaderTitle(route)})}
               />
+              <Stack.Screen
+                name="CreateUser"
+                component={CreateUserScreen}
+                options={({route}) => ({headerTitle: getHeaderTitle(route)})}
+              />
             </>
           )}
         </>
@@ -114,15 +120,16 @@ const BottomTabBar = () => {
   );
 };
 
-function getHeaderTitleForTabBar(route) {
+const getHeaderTitleForTabBar = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
   if (routeName === 'NewRestaurant') return 'New Restaurant';
   return routeName;
-}
+};
 
-function getHeaderTitle(route) {
+const getHeaderTitle = (route) => {
   if (route.name === 'CreateRestaurant') return 'Create Restaurant';
   if (route.name === 'UpdateDeleteRestaurant')
     return 'Update/Delete Restaurant';
+  if (route.name === 'CreateUser') return 'Create User';
   return route.name;
-}
+};

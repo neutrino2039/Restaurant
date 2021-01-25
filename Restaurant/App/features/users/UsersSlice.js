@@ -16,10 +16,10 @@ export const getAllUsers = createAsyncThunk(
 
 export const createUser = createAsyncThunk(
   'user/create',
-  async ({username, password, firstName, lastName, role}, thunkAPI) => {
+  async ({userName, password, firstName, lastName, role}, thunkAPI) => {
     return thunkHandler(
       post('User/Create', {
-        username,
+        userName,
         password,
         firstName,
         lastName,

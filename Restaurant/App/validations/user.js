@@ -2,9 +2,7 @@ export const validateUserName = (userName) => {
   let errors = [];
   if (!userName) errors.push('User name should not be empty.');
   if (userName !== null && (userName.length < 4 || userName.length > 256))
-    errors.push(
-      'User name should have a minimum length < 4 && maximum length of 256.',
-    );
+    errors.push('User name should have a length between 4 and 256 characters.');
   return {'User Name': errors};
 };
 
@@ -27,7 +25,7 @@ export const validateConfirmPassword = ({password, confirmPassword}) => {
 export const validateFirstName = (firstName) => {
   let errors = [];
   if (!firstName) errors.push('First name should not be empty.');
-  if (firstName !== null && firstName.length > 256)
+  if (firstName !== null && (firstName.length < 1 || firstName.length > 256))
     errors.push('First name should have a maximum length of 256.');
   return {'First Name': errors};
 };
@@ -35,7 +33,7 @@ export const validateFirstName = (firstName) => {
 export const validateLastName = (lastName) => {
   let errors = [];
   if (!lastName) errors.push('Last name should not be empty.');
-  if (lastName !== null && lastName.length > 256)
+  if (lastName !== null && (lastName.length < 1 || lastName.length > 256))
     errors.push('Last name should have a maximum length of 256.');
   return {'Last Name': errors};
 };

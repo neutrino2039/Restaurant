@@ -25,9 +25,7 @@ export default ({navigation}) => {
   const status = users.status;
   const errors = users.errors;
 
-  console.log(users);
-
-  if (status !== 'succeeded' && !users.data)
+  if (status !== 'succeeded' && !refreshing)
     return (
       <View style={styles.noDataContainer}>
         <ActivityIndicator size="large" color="darkblue" />
