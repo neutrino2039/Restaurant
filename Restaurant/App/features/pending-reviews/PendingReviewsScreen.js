@@ -46,8 +46,8 @@ export default ({route, navigation}) => {
       );
       unwrapResult(replyToReviewAction);
       ToastAndroid.show('Reply submitted.', ToastAndroid.LONG);
-      await dispatch(getAllRestaurants());
-      await getData();
+      dispatch(getAllRestaurants());
+      getData();
     } catch {}
   };
 

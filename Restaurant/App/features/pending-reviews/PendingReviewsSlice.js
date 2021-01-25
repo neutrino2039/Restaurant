@@ -8,16 +8,16 @@ const initialState = {
 };
 
 export const replyToReview = createAsyncThunk(
-  'review/create',
+  'review/replyToReview',
   async ({id, reply}, thunkAPI) =>
     thunkHandler(post('Review/ReplyToReview', {id, reply}), thunkAPI),
 );
 
 export const getReviewsPendingReply = createAsyncThunk(
-  'review/getByRestaurantId',
+  'review/getReviewsPendingReply',
   async (restaurantId, thunkAPI) =>
     thunkHandler(
-      get('Review/getReviewsPendingReply', {restaurantId}),
+      get('Review/GetReviewsPendingReply', {restaurantId}),
       thunkAPI,
     ),
 );
