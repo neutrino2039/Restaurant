@@ -100,7 +100,7 @@ namespace Restaurant.WebApi.Services.Restaurant
 
             db.Restaurants.Remove(restaurant);
             var result = await db.SaveChangesAsync();
-            if (result != 1)
+            if (result == 0)
                 return new DeleteRestaurantResponse
                 {
                     Errors = CreateError("DeleteRestaurant", "Unable to delete restaurant.")
