@@ -22,8 +22,12 @@ export default ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text h2>Restaurant</Text>
-      <Text h2>Review</Text>
+      <Text h2 style={styles.text}>
+        Restaurant
+      </Text>
+      <Text h2 style={styles.text}>
+        Review
+      </Text>
     </View>
   );
 };
@@ -36,6 +40,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   text: {
-    color: 'darkgreen',
+    color: 'green',
   },
 });
