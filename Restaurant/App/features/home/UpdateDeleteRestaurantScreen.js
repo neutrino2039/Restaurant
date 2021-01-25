@@ -57,8 +57,8 @@ export default ({route, navigation}) => {
       );
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllRestaurants());
         ToastAndroid.show('Restaurant saved', ToastAndroid.LONG);
+        dispatch(getAllRestaurants());
         navigation.goBack();
       }
     } catch (error) {}
@@ -69,8 +69,8 @@ export default ({route, navigation}) => {
       const action = await dispatch(deleteRestaurant({id: restaurant.id}));
       const result = unwrapResult(action);
       if (!result.errors) {
-        await dispatch(getAllRestaurants());
         ToastAndroid.show('Restaurant deleted', ToastAndroid.LONG);
+        dispatch(getAllRestaurants());
         navigation.goBack();
       }
     } catch (error) {}
